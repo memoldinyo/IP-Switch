@@ -12,6 +12,18 @@ benannte Profile speichert und per Klick anwendet: statische Adresse, DHCP, Gate
   wiederhergestellt.
 - Alle Daten liegen ausschließlich lokal. Es gibt keine Cloud-Anbindung, keine Telemetrie und keine Datenübertragung.
 
+## Screenshots
+
+| Heller Modus | Dunkler Modus |
+|---|---|
+| ![Verwaltungsfenster im hellen Modus](docs/screenshots/main-light-de.png) | ![Verwaltungsfenster im dunklen Modus](docs/screenshots/main-dark-de.png) |
+
+**Tray-Menü** (Rechtsklick auf das Tray-Symbol):
+
+![Tray-Kontextmenü mit Adapter-Untermenü](docs/screenshots/tray-menu-de.png)
+
+<sub>Dargestellt mit Beispielprofilen und Beispieladaptern.</sub>
+
 ## Funktionen
 
 | Bereich | Funktion |
@@ -42,27 +54,13 @@ benannte Profile speichert und per Klick anwendet: statische Adresse, DHCP, Gate
 
 ## Bedienung
 
-**Tray-Symbol:** Ein Klick mit der linken oder rechten Maustaste öffnet das Menü.
-
-```
-IP-Switch
-──────────────
-SPS-Inbetriebnahme  →  Ethernet          ← Schnellzugriff (zugeordnete Profile, ein Klick wendet an)
-Schnellzugriff einrichten              ▸   Profil ▸ Adapter wählen bzw. „Keine Zuordnung“
-──────────────
-● Ethernet   192.168.1.100/24 (Statisch) ▸   Status, IP, Gateway, DNS
-● WLAN       192.168.20.122/24 (DHCP)    ▸     Profil „…“ anwenden
-Weitere Adapter (7)                      ▸     Anderes Profil anwenden ▸
-──────────────                                 DHCP aktivieren (IP und DNS)
-Verwaltung öffnen…                             Aktuelle Konfiguration als Profil speichern…
-Neues Profil…                                  Letzte Sicherung wiederherstellen
-──────────────
-Einstellungen ▸  (alle Adapter anzeigen, Erfolgsmeldungen, Mit Windows starten,
-                  Mit Administratorrechten starten, Jetzt mit Administratorrechten neu starten,
-                  Darstellung: Wie Windows / Hell / Dunkel, Sprache, Datenordner)
-Über IP-Switch
-Beenden
-```
+**Tray-Symbol:** Ein Klick mit der linken oder rechten Maustaste öffnet das Menü (siehe Screenshot oben).
+- **Schnellzugriff** ganz oben: zugeordnete Profile als „Profil → Adapter“, ein Klick wendet an. Über
+  *Schnellzugriff einrichten* ordnet man Profile direkt im Menü einem Adapter zu.
+- **Ein Untermenü je Adapter** mit Status, IP, Gateway und DNS sowie „Profil … anwenden“, „Anderes Profil anwenden“,
+  „DHCP aktivieren“, „Aktuelle Konfiguration als Profil speichern …“ und „Letzte Sicherung wiederherstellen“.
+- **Einstellungen:** alle Adapter anzeigen, Erfolgsmeldungen, Mit Windows starten, Mit Administratorrechten starten,
+  Jetzt mit Administratorrechten neu starten, Darstellung (Wie Windows / Hell / Dunkel), Sprache, Datenordner.
 
 **Verwaltungsfenster:** Das Fenster ist im Kartenlayout aufgebaut. Es folgt dem Hell-/Dunkel-Modus von Windows;
 umschalten lässt sich das im Tray unter *Einstellungen → Darstellung*.
@@ -182,7 +180,7 @@ IPSwitch.sln
 ├─ packaging/                  Installations-/Deinstallationsskripte für das ZIP-Paket
 ├─ samples/                    Beispielprofile
 ├─ tools/                      Erzeugung des Programmsymbols
-├─ docs/                       Build- und Installationsanleitung
+├─ docs/                       Handbücher, Build- und Installationsanleitung, Screenshots
 └─ build.ps1                   Tests, Veröffentlichung, ZIP- und MSI-Pakete
 ```
 

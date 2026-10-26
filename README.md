@@ -13,6 +13,18 @@ profiles and applies them with one click: static address, DHCP, gateway and DNS.
 - User interface in 8 languages: English, German, Turkish, French, Italian, Arabic (right-to-left), Chinese
   (Simplified) and Russian.
 
+## Screenshots
+
+| Light mode | Dark mode |
+|---|---|
+| ![Manager window in light mode](docs/screenshots/main-light.png) | ![Manager window in dark mode](docs/screenshots/main-dark.png) |
+
+**Tray menu** (right-click on the tray icon):
+
+![Tray context menu with adapter submenu](docs/screenshots/tray-menu.png)
+
+<sub>Shown with sample profiles and adapters.</sub>
+
 ## Features
 
 | Area | Function |
@@ -43,28 +55,13 @@ profiles and applies them with one click: static address, DHCP, gateway and DNS.
 
 ## Usage
 
-**Tray icon:** a left or right click opens the menu.
-
-```
-IP-Switch
-──────────────
-PLC commissioning  →  Ethernet           ← quick access (assigned profiles, one click applies)
-Set up quick access                    ▸   profile ▸ choose adapter or “No assignment”
-──────────────
-● Ethernet   192.168.1.100/24 (Static) ▸   status, IP, gateway, DNS
-● Wi-Fi      192.168.20.122/24 (DHCP)  ▸     Apply profile “…”
-More adapters (7)                      ▸     Apply another profile ▸
-──────────────                               Enable DHCP (IP and DNS)
-Open manager …                               Save current configuration as profile …
-New profile …                                Restore latest backup
-──────────────
-Settings ▸  (show all adapters, success notifications, start with Windows,
-             start with administrator rights, restart with administrator rights now,
-             appearance: same as Windows / light / dark, language, data folder)
-Help
-About IP-Switch
-Exit
-```
+**Tray icon:** a left or right click opens the menu (see the screenshot above).
+- **Quick access** at the top: assigned profiles as “Profile → Adapter”, one click applies. *Set up quick access* assigns
+  profiles to adapters directly from the menu.
+- **One submenu per adapter** with status, IP, gateway and DNS, plus “Apply profile …”, “Apply another profile”,
+  “Enable DHCP”, “Save current configuration as profile …” and “Restore latest backup”.
+- **Settings:** show all adapters, success notifications, start with Windows, start with administrator rights,
+  restart with administrator rights now, appearance (same as Windows / light / dark), language, data folder.
 
 **Manager window:** a card layout that follows the Windows light/dark mode (switchable in the tray under
 *Settings → Appearance*).
@@ -195,7 +192,7 @@ IPSwitch.sln
 ├─ packaging/                  Install/uninstall scripts for the ZIP package
 ├─ samples/                    Sample profiles
 ├─ tools/                      Generation of the application icon
-├─ docs/                       Manuals, build and installation guides
+├─ docs/                       Manuals, build and installation guides, screenshots
 └─ build.ps1                   Tests, publishing, ZIP and MSI packages
 ```
 
