@@ -1,0 +1,56 @@
+{
+  "format": "IPSwitch.Profiles",
+  "version": 1,
+  "profiles": [
+    {
+      "id": "6f1c1f0e-3b8a-4c43-9d5e-0a1b2c3d4e01",
+      "name": "Büro (DHCP)",
+      "description": "Standard im Firmennetz: IP-Adresse und DNS-Server automatisch beziehen.",
+      "useDhcp": true
+    },
+    {
+      "id": "6f1c1f0e-3b8a-4c43-9d5e-0a1b2c3d4e02",
+      "name": "DHCP mit festem DNS",
+      "description": "IP-Adresse per DHCP, DNS-Server fest vorgegeben.",
+      "useDhcp": true,
+      "preferredDns": "1.1.1.1",
+      "alternateDns": "1.0.0.1"
+    },
+    {
+      "id": "6f1c1f0e-3b8a-4c43-9d5e-0a1b2c3d4e03",
+      "name": "Labor 192.168.0.x",
+      "description": "Testnetz im Labor mit Gateway und DNS.",
+      "useDhcp": false,
+      "ipAddress": "192.168.0.50",
+      "subnetMask": "255.255.255.0",
+      "gateway": "192.168.0.1",
+      "preferredDns": "192.168.0.1"
+    },
+    {
+      "id": "6f1c1f0e-3b8a-4c43-9d5e-0a1b2c3d4e04",
+      "name": "SPS-Inbetriebnahme",
+      "description": "Direktverbindung zur Steuerung, ohne Gateway und DNS.",
+      "useDhcp": false,
+      "ipAddress": "192.168.1.100",
+      "subnetMask": "24"
+    },
+    {
+      "id": "6f1c1f0e-3b8a-4c43-9d5e-0a1b2c3d4e05",
+      "name": "Heimnetz statisch",
+      "useDhcp": false,
+      "ipAddress": "192.168.178.20",
+      "subnetMask": "/24",
+      "gateway": "192.168.178.1",
+      "preferredDns": "192.168.178.1",
+      "alternateDns": "9.9.9.9"
+    },
+    {
+      "id": "6f1c1f0e-3b8a-4c43-9d5e-0a1b2c3d4e06",
+      "name": "Punkt-zu-Punkt /30",
+      "description": "Kleines Transfernetz zwischen zwei Geräten.",
+      "useDhcp": false,
+      "ipAddress": "10.10.10.1",
+      "subnetMask": "255.255.255.252"
+    }
+  ]
+}

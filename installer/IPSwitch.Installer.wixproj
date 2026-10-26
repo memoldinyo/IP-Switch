@@ -1,0 +1,17 @@
+<Project Sdk="WixToolset.Sdk/5.0.2">
+  <!--
+    Erzeugt ein benutzerbezogenes MSI (keine Administratorrechte für die Installation nötig).
+    Wird von build.ps1 aufgerufen; PublishDir muss auf die veröffentlichte IPSwitch.exe zeigen:
+      dotnet build installer\IPSwitch.Installer.wixproj -c Release -p:PublishDir=<Pfad> -p:ProductVersion=1.0.0
+  -->
+  <PropertyGroup>
+    <ProductVersion Condition="'$(ProductVersion)' == ''">1.0.0</ProductVersion>
+    <OutputName>IPSwitch-$(ProductVersion)-x64</OutputName>
+    <InstallerPlatform>x64</InstallerPlatform>
+    <DefineConstants>PublishDir=$(PublishDir);ProductVersion=$(ProductVersion);RepoRoot=$(MSBuildThisFileDirectory)..;Author=$(IPSwitchAuthor)</DefineConstants>
+    <Cultures>de-DE</Cultures>
+    <!-- ICE91 weist nur darauf hin, dass Dateien im Benutzerprofil nicht für alle Benutzer installiert werden –
+         genau das ist bei diesem reinen Per-User-Paket beabsichtigt. -->
+    <SuppressIces>ICE91</SuppressIces>
+  </PropertyGroup>
+</Project>

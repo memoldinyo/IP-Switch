@@ -1,0 +1,97 @@
+<Wix xmlns="http://wixtoolset.org/schemas/v4/wxs">
+  <!--
+    Benutzerbezogene Installation nach %LOCALAPPDATA%\Programs\IP-Switch.
+    Administratorrechte werden weder für die Installation noch für den Betrieb benötigt –
+    nur die Anwendung selbst fordert sie beim Ändern von Netzwerkeinstellungen per UAC an.
+  -->
+  <Package Name="IP-Switch"
+           Manufacturer="$(var.Author)"
+           Version="$(var.ProductVersion)"
+           UpgradeCode="3691A1DD-FB96-4DC0-8AC2-47571DE5596B"
+           Scope="perUser"
+           Language="1031"
+           Codepage="1252"
+           Compressed="yes">
+
+    <SummaryInformation Description="IP-Switch – Verwaltung von IP-Konfigurationen" Manufacturer="$(var.Author)" />
+    <MajorUpgrade DowngradeErrorMessage="Eine neuere Version von IP-Switch ist bereits installiert." />
+    <MediaTemplate EmbedCab="yes" />
+
+    <Icon Id="AppIcon" SourceFile="$(var.RepoRoot)\src\IPSwitch.App\Assets\app.ico" />
+    <Property Id="ARPPRODUCTICON" Value="AppIcon" />
+    <Property Id="ARPNOMODIFY" Value="1" />
+    <Property Id="ARPNOREPAIR" Value="1" />
+
+    <!-- LAUNCHAPP=0 bzw. AUTOSTART=0 auf der Kommandozeile deaktivieren Start bzw. Autostart. -->
+    <Property Id="LAUNCHAPP" Value="1" />
+    <Property Id="AUTOSTART" Value="1" />
+
+    <StandardDirectory Id="LocalAppDataFolder">
+      <Directory Id="ProgramsDir" Name="Programs">
+        <Directory Id="INSTALLFOLDER" Name="IP-Switch">
+          <Directory Id="SamplesDir" Name="samples" />
+          <Directory Id="DocsDir" Name="docs" />
+        </Directory>
+      </Directory>
+    </StandardDirectory>
+    <StandardDirectory Id="ProgramMenuFolder" />
+
+    <ComponentGroup Id="AppComponents">
+      <Component Id="MainExecutable" Directory="INSTALLFOLDER" Guid="5B2B9F7C-3D3B-4C8E-9E0A-7C1D2E3F4A01">
+        <File Id="IPSwitchExe" Source="$(var.PublishDir)\IPSwitch.exe" />
+        <File Id="Readme" Source="$(var.RepoRoot)\README.md" />
+        <File Id="ReadmeDe" Source="$(var.RepoRoot)\README.de.md" />
+        <File Id="License" Source="$(var.RepoRoot)\LICENSE" Name="LICENSE.txt" />
+        <File Id="Notice" Source="$(var.RepoRoot)\NOTICE" Name="NOTICE.txt" />
+        <RegistryValue Root="HKCU" Key="Software\IPSwitch" Name="InstallDir" Type="string" Value="[INSTALLFOLDER]" KeyPath="yes" />
+        <RemoveFolder Id="RemoveInstallFolder" Directory="INSTALLFOLDER" On="uninstall" />
+        <RemoveFolder Id="RemoveProgramsDir" Directory="ProgramsDir" On="uninstall" />
+      </Component>
+
+      <Component Id="Samples" Directory="SamplesDir" Guid="5B2B9F7C-3D3B-4C8E-9E0A-7C1D2E3F4A02">
+        <File Id="SampleProfiles" Source="$(var.RepoRoot)\samples\beispielprofile.json" />
+        <RegistryValue Root="HKCU" Key="Software\IPSwitch" Name="Samples" Type="integer" Value="1" KeyPath="yes" />
+        <RemoveFolder Id="RemoveSamplesDir" Directory="SamplesDir" On="uninstall" />
+      </Component>
+
+      <Component Id="Docs" Directory="DocsDir" Guid="5B2B9F7C-3D3B-4C8E-9E0A-7C1D2E3F4A05">
+        <File Id="Manual" Source="$(var.RepoRoot)\docs\BENUTZERHANDBUCH.md" />
+        <File Id="ManualEn" Source="$(var.RepoRoot)\docs\USER_MANUAL.md" />
+        <File Id="InstallGuide" Source="$(var.RepoRoot)\docs\INSTALLATION.md" />
+        <RegistryValue Root="HKCU" Key="Software\IPSwitch" Name="Docs" Type="integer" Value="1" KeyPath="yes" />
+        <RemoveFolder Id="RemoveDocsDir" Directory="DocsDir" On="uninstall" />
+      </Component>
+
+      <Component Id="StartMenuShortcut" Directory="ProgramMenuFolder" Guid="5B2B9F7C-3D3B-4C8E-9E0A-7C1D2E3F4A03">
+        <Shortcut Id="StartMenuEntry"
+                  Name="IP-Switch"
+                  Description="IP-Konfigurationen verwalten"
+                  Target="[INSTALLFOLDER]IPSwitch.exe"
+                  WorkingDirectory="INSTALLFOLDER"
+                  Icon="AppIcon" />
+        <RegistryValue Root="HKCU" Key="Software\IPSwitch" Name="StartMenuShortcut" Type="integer" Value="1" KeyPath="yes" />
+      </Component>
+
+      <!-- Autostart (HKCU\...\Run). Kann in der Anwendung abgeschaltet werden; wird bei der Deinstallation entfernt. -->
+      <Component Id="Autostart" Directory="INSTALLFOLDER" Guid="5B2B9F7C-3D3B-4C8E-9E0A-7C1D2E3F4A04" Condition="AUTOSTART = &quot;1&quot;">
+        <RegistryValue Root="HKCU" Key="Software\Microsoft\Windows\CurrentVersion\Run" Name="IPSwitch" Type="string"
+                       Value="&quot;[INSTALLFOLDER]IPSwitch.exe&quot; --autostart" KeyPath="yes" />
+      </Component>
+    </ComponentGroup>
+
+    <Feature Id="Main" Title="IP-Switch" Level="1">
+      <ComponentGroupRef Id="AppComponents" />
+    </Feature>
+
+    <!-- Anwendung nach der Erstinstallation bzw. einem Update starten. -->
+    <CustomAction Id="LaunchApplication"
+                  Directory="INSTALLFOLDER"
+                  ExeCommand="&quot;[INSTALLFOLDER]IPSwitch.exe&quot;"
+                  Execute="immediate"
+                  Impersonate="yes"
+                  Return="asyncNoWait" />
+    <InstallExecuteSequence>
+      <Custom Action="LaunchApplication" After="InstallFinalize" Condition="NOT REMOVE AND LAUNCHAPP = &quot;1&quot; AND UILevel &gt;= 3" />
+    </InstallExecuteSequence>
+  </Package>
+</Wix>

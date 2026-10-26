@@ -1,0 +1,36 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <OutputType>WinExe</OutputType>
+    <TargetFramework>net10.0-windows</TargetFramework>
+    <UseWindowsForms>true</UseWindowsForms>
+    <RootNamespace>IPSwitch.App</RootNamespace>
+    <AssemblyName>IPSwitch</AssemblyName>
+    <AssemblyTitle>IP-Switch</AssemblyTitle>
+    <Description>Tray-Anwendung zur Verwaltung von IPv4-Konfigurationen</Description>
+    <ApplicationIcon>Assets\app.ico</ApplicationIcon>
+    <ApplicationManifest>app.manifest</ApplicationManifest>
+    <ApplicationHighDpiMode>PerMonitorV2</ApplicationHighDpiMode>
+    <ApplicationVisualStyles>true</ApplicationVisualStyles>
+    <ApplicationUseCompatibleTextRendering>false</ApplicationUseCompatibleTextRendering>
+    <!-- Ressourcenschonend: Workstation-GC ohne Hintergrund-GC-Threads, kein Tiered-PGO-Overhead nötig. -->
+    <ServerGarbageCollection>false</ServerGarbageCollection>
+    <ConcurrentGarbageCollection>false</ConcurrentGarbageCollection>
+    <InvariantGlobalization>false</InvariantGlobalization>
+    <UseSystemResourceKeys>false</UseSystemResourceKeys>
+  </PropertyGroup>
+
+  <!-- Einstellungen für "dotnet publish" (Single-File, eigenständig, x64) -->
+  <PropertyGroup Condition="'$(Configuration)' == 'Release'">
+    <RuntimeIdentifier>win-x64</RuntimeIdentifier>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <EmbeddedResource Include="Assets\app.ico" LogicalName="IPSwitch.App.app.ico" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\IPSwitch.Core\IPSwitch.Core.csproj" />
+  </ItemGroup>
+
+</Project>
