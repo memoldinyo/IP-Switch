@@ -33,9 +33,9 @@ jobs:
       version: ${{ steps.version.outputs.version }}
       artifact-id: ${{ steps.upload.outputs.artifact-id }}
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v7
 
-      - uses: actions/setup-dotnet@v4
+      - uses: actions/setup-dotnet@v6
         with:
           dotnet-version: 10.0.x
 
@@ -56,7 +56,7 @@ jobs:
 
       - name: Upload unsigned executables
         id: upload
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v7
         with:
           name: unsigned-executables
           path: artifacts/publish/
@@ -69,7 +69,7 @@ jobs:
     runs-on: windows-latest
     steps:
       - name: Submit signing request
-        uses: signpath/github-action-submit-signing-request@v1
+        uses: signpath/github-action-submit-signing-request@v2
         with:
           api-token: ${{ secrets.SIGNPATH_API_TOKEN }}
           organization-id: ${{ vars.SIGNPATH_ORGANIZATION_ID }}
@@ -82,7 +82,7 @@ jobs:
           output-artifact-directory: signed
 
       - name: Upload signed executables
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v7
         with:
           name: signed-executables
           path: signed/
@@ -96,14 +96,14 @@ jobs:
     outputs:
       artifact-id: ${{ steps.upload.outputs.artifact-id }}
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v7
 
-      - uses: actions/setup-dotnet@v4
+      - uses: actions/setup-dotnet@v6
         with:
           dotnet-version: 10.0.x
 
       - name: Download executables
-        uses: actions/download-artifact@v4
+        uses: actions/download-artifact@v8
         with:
           name: ${{ needs.sign-executables.result == 'success' && 'signed-executables' || 'unsigned-executables' }}
           path: artifacts/publish
@@ -114,7 +114,7 @@ jobs:
 
       - name: Upload packages
         id: upload
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v7
         with:
           name: packages
           path: |
@@ -129,7 +129,7 @@ jobs:
     runs-on: windows-latest
     steps:
       - name: Submit signing request
-        uses: signpath/github-action-submit-signing-request@v1
+        uses: signpath/github-action-submit-signing-request@v2
         with:
           api-token: ${{ secrets.SIGNPATH_API_TOKEN }}
           organization-id: ${{ vars.SIGNPATH_ORGANIZATION_ID }}
@@ -142,7 +142,7 @@ jobs:
           output-artifact-directory: signed
 
       - name: Upload signed packages
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v7
         with:
           name: signed-packages
           path: signed/
@@ -156,10 +156,10 @@ jobs:
     permissions:
       contents: write
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v7
 
       - name: Download packages
-        uses: actions/download-artifact@v4
+        uses: actions/download-artifact@v8
         with:
           name: ${{ needs.sign-installer.result == 'success' && 'signed-packages' || 'packages' }}
           path: release
