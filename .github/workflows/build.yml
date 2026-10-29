@@ -1,0 +1,191 @@
+# Build, test and package IP-Switch.
+#
+# Every push and pull request: tests + unsigned packages as workflow artifacts.
+# Tag "v<version>" (e.g. v1.5.0): the executables and the MSI are signed via SignPath (if configured)
+# and a GitHub release with all packages and SHA-256 checksums is created.
+#
+# SignPath configuration (see docs/SIGNING.md):
+#   secret   SIGNPATH_API_TOKEN
+#   variable SIGNPATH_ORGANIZATION_ID, SIGNPATH_PROJECT_SLUG, SIGNPATH_SIGNING_POLICY_SLUG
+# Without these values signing is skipped and the release contains unsigned files.
+
+name: Build
+
+on:
+  push:
+    branches: [main]
+    tags: ['v*']
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+env:
+  DOTNET_NOLOGO: true
+  DOTNET_CLI_TELEMETRY_OPTOUT: true
+
+jobs:
+  build:
+    name: Test and publish
+    runs-on: windows-latest
+    outputs:
+      version: ${{ steps.version.outputs.version }}
+      artifact-id: ${{ steps.upload.outputs.artifact-id }}
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: 10.0.x
+
+      - name: Read version
+        id: version
+        shell: pwsh
+        run: |
+          [xml]$props = Get-Content Directory.Build.props
+          $version = ($props.Project.PropertyGroup | Where-Object { $_.Version } | Select-Object -First 1).Version
+          if ($env:GITHUB_REF -like 'refs/tags/v*' -and $env:GITHUB_REF_NAME -ne "v$version") {
+            throw "Tag $($env:GITHUB_REF_NAME) does not match version $version in Directory.Build.props."
+          }
+          "version=$version" >> $env:GITHUB_OUTPUT
+
+      - name: Test and publish
+        shell: pwsh
+        run: ./build.ps1 -Stage Publish
+
+      - name: Upload unsigned executables
+        id: upload
+        uses: actions/upload-artifact@v4
+        with:
+          name: unsigned-executables
+          path: artifacts/publish/
+          if-no-files-found: error
+
+  sign-executables:
+    name: Sign executables (SignPath)
+    needs: build
+    if: startsWith(github.ref, 'refs/tags/v') && vars.SIGNPATH_PROJECT_SLUG != ''
+    runs-on: windows-latest
+    steps:
+      - name: Submit signing request
+        uses: signpath/github-action-submit-signing-request@v1
+        with:
+          api-token: ${{ secrets.SIGNPATH_API_TOKEN }}
+          organization-id: ${{ vars.SIGNPATH_ORGANIZATION_ID }}
+          project-slug: ${{ vars.SIGNPATH_PROJECT_SLUG }}
+          signing-policy-slug: ${{ vars.SIGNPATH_SIGNING_POLICY_SLUG }}
+          artifact-configuration-slug: executables
+          github-artifact-id: ${{ needs.build.outputs.artifact-id }}
+          wait-for-completion: true
+          wait-for-completion-timeout-in-seconds: 3600
+          output-artifact-directory: signed
+
+      - name: Upload signed executables
+        uses: actions/upload-artifact@v4
+        with:
+          name: signed-executables
+          path: signed/
+          if-no-files-found: error
+
+  package:
+    name: Package (ZIP, MSI)
+    needs: [build, sign-executables]
+    if: always() && needs.build.result == 'success' && contains(fromJSON('["success","skipped"]'), needs.sign-executables.result)
+    runs-on: windows-latest
+    outputs:
+      artifact-id: ${{ steps.upload.outputs.artifact-id }}
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: 10.0.x
+
+      - name: Download executables
+        uses: actions/download-artifact@v4
+        with:
+          name: ${{ needs.sign-executables.result == 'success' && 'signed-executables' || 'unsigned-executables' }}
+          path: artifacts/publish
+
+      - name: Build packages
+        shell: pwsh
+        run: ./build.ps1 -Stage Package
+
+      - name: Upload packages
+        id: upload
+        uses: actions/upload-artifact@v4
+        with:
+          name: packages
+          path: |
+            artifacts/*.zip
+            artifacts/*.msi
+          if-no-files-found: error
+
+  sign-installer:
+    name: Sign installer (SignPath)
+    needs: package
+    if: startsWith(github.ref, 'refs/tags/v') && vars.SIGNPATH_PROJECT_SLUG != ''
+    runs-on: windows-latest
+    steps:
+      - name: Submit signing request
+        uses: signpath/github-action-submit-signing-request@v1
+        with:
+          api-token: ${{ secrets.SIGNPATH_API_TOKEN }}
+          organization-id: ${{ vars.SIGNPATH_ORGANIZATION_ID }}
+          project-slug: ${{ vars.SIGNPATH_PROJECT_SLUG }}
+          signing-policy-slug: ${{ vars.SIGNPATH_SIGNING_POLICY_SLUG }}
+          artifact-configuration-slug: installer
+          github-artifact-id: ${{ needs.package.outputs.artifact-id }}
+          wait-for-completion: true
+          wait-for-completion-timeout-in-seconds: 3600
+          output-artifact-directory: signed
+
+      - name: Upload signed packages
+        uses: actions/upload-artifact@v4
+        with:
+          name: signed-packages
+          path: signed/
+          if-no-files-found: error
+
+  release:
+    name: GitHub release
+    needs: [build, package, sign-installer]
+    if: always() && startsWith(github.ref, 'refs/tags/v') && needs.package.result == 'success' && contains(fromJSON('["success","skipped"]'), needs.sign-installer.result)
+    runs-on: windows-latest
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Download packages
+        uses: actions/download-artifact@v4
+        with:
+          name: ${{ needs.sign-installer.result == 'success' && 'signed-packages' || 'packages' }}
+          path: release
+
+      - name: Create release
+        shell: pwsh
+        env:
+          GH_TOKEN: ${{ github.token }}
+          VERSION: ${{ needs.build.outputs.version }}
+          SIGNED: ${{ needs.sign-installer.result == 'success' }}
+        run: |
+          Get-ChildItem release -File | Where-Object Extension -in '.zip', '.msi' | Sort-Object Name | ForEach-Object {
+            "{0}  {1}" -f (Get-FileHash $_.FullName -Algorithm SHA256).Hash.ToLowerInvariant(), $_.Name
+          } | Set-Content release/SHA256SUMS.txt -Encoding ascii
+
+          # Section "## <version>" from CHANGELOG.md plus the common release footer.
+          $changelog = Get-Content CHANGELOG.md -Raw
+          $match = [regex]::Match($changelog, "(?ms)^## \[?$([regex]::Escape($env:VERSION))\]?[^\n]*\n(.*?)(?=^## |\z)")
+          $notes = if ($match.Success) { $match.Groups[1].Value } else { "IP-Switch $env:VERSION" }
+          # Drop Markdown link definitions ("[1.4.0]: https://...") at the end of the changelog.
+          $notes = (($notes -split "`r?`n") | Where-Object { $_ -notmatch '^\[[^\]]+\]:\s' }) -join "`n"
+          $notes = $notes.Trim()
+          $footer = (Get-Content .github/release-footer.md -Raw).Replace('{version}', $env:VERSION)
+          if ($env:SIGNED -ne 'true') {
+            $footer = $footer -replace '(?ms)<!-- signed -->.*?<!-- /signed -->', 'This release is not code-signed.'
+          }
+          "$notes`n`n$footer" | Set-Content release-notes.md -Encoding utf8
+
+          gh release create $env:GITHUB_REF_NAME --title "IP-Switch $env:VERSION" --notes-file release-notes.md --verify-tag (Get-ChildItem release -File).FullName

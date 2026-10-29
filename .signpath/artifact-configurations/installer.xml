@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  SignPath artifact configuration "installer".
+  Input: GitHub artifact "packages" with IPSwitch-<version>-x64.msi and the two ZIP packages.
+  The executables inside were already signed in the "executables" step; only the MSI is signed here,
+  the ZIP files are passed through unchanged.
+-->
+<artifact-configuration xmlns="http://signpath.io/artifact-configuration/v1">
+  <zip-file>
+    <msi-file-set>
+      <include path="IPSwitch-*-x64.msi" min-matches="1" max-matches="1" />
+      <for-each>
+        <authenticode-sign />
+      </for-each>
+    </msi-file-set>
+  </zip-file>
+</artifact-configuration>

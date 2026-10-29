@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  SignPath artifact configuration "executables".
+  Input: GitHub artifact "unsigned-executables" = artifacts/publish/ with
+    IPSwitch-<version>-win-x64/IPSwitch.exe        (self-contained single file)
+    IPSwitch-<version>-win-x64-net10/IPSwitch.exe  (framework-dependent single file)
+-->
+<artifact-configuration xmlns="http://signpath.io/artifact-configuration/v1">
+  <zip-file>
+    <pe-file-set>
+      <include path="*/IPSwitch.exe" min-matches="2" max-matches="2" />
+      <for-each>
+        <authenticode-sign />
+      </for-each>
+    </pe-file-set>
+  </zip-file>
+</artifact-configuration>

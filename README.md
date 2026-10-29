@@ -1,5 +1,9 @@
 # IP-Switch
 
+[![Build](https://github.com/memoldinyo/IP-Switch/actions/workflows/build.yml/badge.svg)](https://github.com/memoldinyo/IP-Switch/actions/workflows/build.yml)
+[![Release](https://img.shields.io/github/v/release/memoldinyo/IP-Switch)](https://github.com/memoldinyo/IP-Switch/releases/latest)
+[![License](https://img.shields.io/github/license/memoldinyo/IP-Switch)](LICENSE)
+
 **Author:** Mehmet Aslandag · **License:** [Apache 2.0](LICENSE) · [Deutsch](README.de.md)
 
 IP-Switch is a lightweight Windows tray application that stores IPv4 configurations of network adapters as named
@@ -24,6 +28,21 @@ profiles and applies them with one click: static address, DHCP, gateway and DNS.
 ![Tray context menu with adapter submenu](docs/screenshots/tray-menu.png)
 
 <sub>Shown with sample profiles and adapters.</sub>
+
+## Download
+
+Get the latest version from the [releases page](https://github.com/memoldinyo/IP-Switch/releases/latest):
+
+| File | Description |
+|---|---|
+| `IPSwitch-<version>-x64.msi` | Installer (per user, no administrator rights required for installation) |
+| `IPSwitch-<version>-win-x64.zip` | Portable, self-contained – no .NET installation required |
+| `IPSwitch-<version>-win-x64-net10.zip` | Portable, small – requires the .NET 10 Desktop Runtime |
+
+All release files are built from source by [GitHub Actions](https://github.com/memoldinyo/IP-Switch/actions).
+IP-Switch uses free code signing provided by [SignPath.io](https://signpath.io), certificate by
+[SignPath Foundation](https://signpath.org) – see the [code signing policy](#code-signing-policy).
+Checksums: `SHA256SUMS.txt` in every release.
 
 ## Features
 
@@ -172,9 +191,12 @@ resolved by renaming (“Name (2)”). Sample profiles: [`samples/beispielprofil
 ```
 
 produces in `artifacts\`: a self-contained ZIP (no .NET installation required), a small ZIP for the .NET 10 Desktop
-Runtime and a per-user MSI (no administrator rights needed for installation). Details:
+Runtime and a per-user MSI (no administrator rights needed for installation). Official releases are built by the
+[GitHub Actions workflow](.github/workflows/build.yml) when a version tag `v<version>` is pushed. Details:
 
 - [Build guide](docs/BUILD.md) (German)
+- [Code signing and release process](docs/SIGNING.md) (German)
+- [Changelog](CHANGELOG.md)
 - [Installation guide](docs/INSTALLATION.md) (German)
 - [User manual](docs/USER_MANUAL.md) · [Benutzerhandbuch](docs/BENUTZERHANDBUCH.md)
 
@@ -193,6 +215,8 @@ IPSwitch.sln
 ├─ samples/                    Sample profiles
 ├─ tools/                      Generation of the application icon
 ├─ docs/                       Manuals, build and installation guides, screenshots
+├─ .github/workflows/          CI: tests, packages, code signing, releases
+├─ .signpath/                  SignPath artifact configurations (code signing)
 └─ build.ps1                   Tests, publishing, ZIP and MSI packages
 ```
 
@@ -213,6 +237,19 @@ in the source code exists. Missing texts fall back to English at runtime.
   the previous configuration is restored.
 - In standard mode every change requires its own UAC confirmation. This is intentional so that no permanently elevated
   processes run. If you do not want this, enable *Start with administrator rights* (see above).
+
+## Code signing policy
+
+Free code signing provided by [SignPath.io](https://signpath.io), certificate by
+[SignPath Foundation](https://signpath.org).
+
+- Only files built from this repository by its [GitHub Actions workflow](.github/workflows/build.yml) are signed.
+  Every signing request for a release is approved manually.
+- Committers and reviewers: [Mehmet Aslandag (memoldinyo)](https://github.com/memoldinyo)
+- Approvers: [Mehmet Aslandag (memoldinyo)](https://github.com/memoldinyo)
+- Privacy: this program will not transfer any information to other networked systems unless specifically requested by
+  the user or the person installing or operating it. See the [privacy policy](PRIVACY.md).
+- Security issues: see the [security policy](SECURITY.md).
 
 ---
 

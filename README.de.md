@@ -1,5 +1,9 @@
 # IP-Switch
 
+[![Build](https://github.com/memoldinyo/IP-Switch/actions/workflows/build.yml/badge.svg)](https://github.com/memoldinyo/IP-Switch/actions/workflows/build.yml)
+[![Release](https://img.shields.io/github/v/release/memoldinyo/IP-Switch)](https://github.com/memoldinyo/IP-Switch/releases/latest)
+[![License](https://img.shields.io/github/license/memoldinyo/IP-Switch)](LICENSE)
+
 **Autor:** Mehmet Aslandag · **Lizenz:** [Apache 2.0](LICENSE) · [English](README.md)
 
 IP-Switch ist eine schlanke Windows-Tray-Anwendung, mit der man IPv4-Konfigurationen von Netzwerkadaptern als
@@ -23,6 +27,21 @@ benannte Profile speichert und per Klick anwendet: statische Adresse, DHCP, Gate
 ![Tray-Kontextmenü mit Adapter-Untermenü](docs/screenshots/tray-menu-de.png)
 
 <sub>Dargestellt mit Beispielprofilen und Beispieladaptern.</sub>
+
+## Download
+
+Die aktuelle Version gibt es auf der [Release-Seite](https://github.com/memoldinyo/IP-Switch/releases/latest):
+
+| Datei | Beschreibung |
+|---|---|
+| `IPSwitch-<Version>-x64.msi` | Installer (pro Benutzer, keine Administratorrechte für die Installation nötig) |
+| `IPSwitch-<Version>-win-x64.zip` | Portabel, eigenständig – keine .NET-Installation nötig |
+| `IPSwitch-<Version>-win-x64-net10.zip` | Portabel, klein – benötigt die .NET 10 Desktop Runtime |
+
+Alle Release-Dateien werden von [GitHub Actions](https://github.com/memoldinyo/IP-Switch/actions) aus dem Quellcode
+gebaut. IP-Switch nutzt die kostenlose Code-Signierung von [SignPath.io](https://signpath.io), Zertifikat von der
+[SignPath Foundation](https://signpath.org) – siehe [Code-Signing-Richtlinie](#code-signing-richtlinie).
+Prüfsummen: `SHA256SUMS.txt` in jedem Release.
 
 ## Funktionen
 
@@ -181,6 +200,8 @@ IPSwitch.sln
 ├─ samples/                    Beispielprofile
 ├─ tools/                      Erzeugung des Programmsymbols
 ├─ docs/                       Handbücher, Build- und Installationsanleitung, Screenshots
+├─ .github/workflows/          CI: Tests, Pakete, Code-Signierung, Releases
+├─ .signpath/                  SignPath-Artefaktkonfigurationen (Code-Signierung)
 └─ build.ps1                   Tests, Veröffentlichung, ZIP- und MSI-Pakete
 ```
 
@@ -189,6 +210,8 @@ IPSwitch.sln
 - [Benutzerhandbuch](docs/BENUTZERHANDBUCH.md) – ausführliche Bedienungsanleitung (auch in der App: **F1** bzw. Tray → **Hilfe**); englisch: [User Manual](docs/USER_MANUAL.md)
 - [Build-Anleitung](docs/BUILD.md)
 - [Installationsanleitung](docs/INSTALLATION.md)
+- [Code-Signierung und Release-Ablauf](docs/SIGNING.md)
+- [Änderungsprotokoll](CHANGELOG.md) (englisch)
 
 ## Grenzen
 
@@ -201,6 +224,20 @@ IPSwitch.sln
   gemeldet, und die vorherige Konfiguration wird wiederhergestellt.
 - Im Standardbetrieb erfordert jede Änderung eine eigene UAC-Bestätigung. Das ist bewusst so, damit keine dauerhaft
   erhöhten Prozesse laufen. Wer das nicht möchte, aktiviert *Mit Administratorrechten starten* (siehe oben).
+
+## Code-Signing-Richtlinie
+
+Kostenlose Code-Signierung durch [SignPath.io](https://signpath.io), Zertifikat von der
+[SignPath Foundation](https://signpath.org).
+
+- Signiert werden nur Dateien, die der [GitHub-Actions-Workflow](.github/workflows/build.yml) aus diesem Repository
+  baut. Jede Signieranfrage für ein Release wird manuell freigegeben.
+- Committer und Reviewer: [Mehmet Aslandag (memoldinyo)](https://github.com/memoldinyo)
+- Freigabe (Approver): [Mehmet Aslandag (memoldinyo)](https://github.com/memoldinyo)
+- Datenschutz: Dieses Programm überträgt keine Informationen an andere vernetzte Systeme, sofern dies nicht
+  ausdrücklich vom Benutzer bzw. der installierenden oder betreibenden Person veranlasst wird. Siehe
+  [Datenschutzerklärung](PRIVACY.md) (englisch).
+- Sicherheitslücken: siehe [Sicherheitsrichtlinie](SECURITY.md) (englisch).
 
 ---
 

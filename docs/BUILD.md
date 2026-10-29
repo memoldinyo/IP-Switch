@@ -36,6 +36,10 @@ Danach liegt in `artifacts\`:
 
 Optionen: `-SkipTests`, `-SkipMsi` (z. B. ohne nuget.org-Zugang), `-Configuration Debug`.
 
+`-Stage` teilt den Ablauf für die Code-Signierung: `Publish` (Tests und EXE-Dateien nach `artifacts\publish`),
+danach die EXE-Dateien signieren, dann `Package` (ZIPs, MSI und Prüfsummen aus `artifacts\publish`). Ohne Angabe
+(`All`) läuft beides direkt hintereinander.
+
 > Falls die Ausführung von Skripten gesperrt ist:
 > `powershell -ExecutionPolicy Bypass -File .\build.ps1`
 
@@ -105,13 +109,21 @@ Die Tests in `tests/IPSwitch.Core.Tests` laufen ohne Administratorrechte und än
 Das tatsächliche Anwenden über `netsh` benötigt Administratorrechte. Es ist deshalb nicht Teil der automatischen Tests
 und muss manuell geprüft werden (siehe [INSTALLATION.md](INSTALLATION.md#manueller-funktionstest)).
 
-## Code-Signatur (empfohlen für die Verteilung)
+## Continuous Integration und Code-Signatur
 
-Die erzeugten Dateien sind nicht signiert. Windows SmartScreen zeigt daher beim ersten Start einen Hinweis. Für die
-Verteilung im Unternehmen EXE und MSI mit einem Code-Signing-Zertifikat signieren, z. B.:
+Der Workflow [`.github/workflows/build.yml`](../.github/workflows/build.yml) baut und testet jeden Push und Pull
+Request. Bei einem Versions-Tag `v<Version>` signiert er EXE und MSI über SignPath und erstellt das GitHub-Release.
+Einrichtung und Release-Ablauf: [SIGNING.md](SIGNING.md).
+
+Lokal gebaute Dateien sind nicht signiert; Windows SmartScreen zeigt daher beim ersten Start einen Hinweis. Wer mit
+einem eigenen Zertifikat signieren möchte (z. B. im Unternehmen), signiert zwischen den Stufen:
 
 ```powershell
-signtool sign /fd SHA256 /tr http://timestamp.digicert.com /td SHA256 /a artifacts\publish\IPSwitch-1.0.0-win-x64\IPSwitch.exe
+.\build.ps1 -Stage Publish
+Get-ChildItem artifacts\publish\*\IPSwitch.exe | ForEach-Object {
+    signtool sign /fd SHA256 /tr http://timestamp.digicert.com /td SHA256 /a $_.FullName }
+.\build.ps1 -Stage Package
+signtool sign /fd SHA256 /tr http://timestamp.digicert.com /td SHA256 /a (Get-ChildItem artifacts\*.msi).FullName
 ```
 
-Dabei die EXE **vor** dem Erstellen des MSI signieren, also `build.ps1` entsprechend erweitern.
+Nach dem Signieren des MSI ändert sich dessen Prüfsumme; `SHA256SUMS.txt` dann neu erzeugen.

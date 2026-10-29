@@ -7,6 +7,9 @@
       IPSwitch-<Version>-win-x64-net10.zip       klein, benötigt die .NET 10 Desktop Runtime
       IPSwitch-<Version>-x64.msi                 benutzerbezogenes MSI (sofern WiX verfügbar)
       SHA256SUMS.txt                             Prüfsummen
+.PARAMETER Stage
+    All (Standard) = alles. Publish = Tests und Veröffentlichen nach artifacts\publish. Package = ZIPs, MSI und
+    Prüfsummen aus einem vorhandenen artifacts\publish erzeugen (z. B. nachdem die EXE in der CI signiert wurde).
 .PARAMETER SkipTests
     Tests überspringen.
 .PARAMETER SkipMsi
@@ -17,6 +20,8 @@
 [CmdletBinding()]
 param(
     [string]$Configuration = 'Release',
+    [ValidateSet('All', 'Publish', 'Package')]
+    [string]$Stage = 'All',
     [switch]$SkipTests,
     [switch]$SkipMsi
 )
@@ -39,6 +44,7 @@ function New-Package([string]$publishDir, [string]$zipName) {
         Copy-Item (Join-Path $root $file) $publishDir -Force
     }
     Copy-Item (Join-Path $root 'docs') $publishDir -Recurse -Force
+    Remove-Item (Join-Path $publishDir 'docs\screenshots') -Recurse -Force -ErrorAction SilentlyContinue
     Copy-Item (Join-Path $root 'samples') $publishDir -Recurse -Force
     Copy-Item (Join-Path $root 'packaging\*') $publishDir -Force
     $zip = Join-Path $artifacts $zipName
@@ -47,11 +53,29 @@ function New-Package([string]$publishDir, [string]$zipName) {
     Write-Host "Paket: $zip"
 }
 
-if (Test-Path $artifacts) {
+$selfContained = Join-Path $artifacts "publish\IPSwitch-$version-win-x64"
+$frameworkDependent = Join-Path $artifacts "publish\IPSwitch-$version-win-x64-net10"
+
+if ($Stage -eq 'Package') {
+    foreach ($dir in $selfContained, $frameworkDependent) {
+        if (-not (Test-Path (Join-Path $dir 'IPSwitch.exe'))) { throw "Veröffentlichte Dateien fehlen: $dir" }
+    }
+    Get-ChildItem $artifacts -File -ErrorAction SilentlyContinue | Remove-Item -Force
+}
+elseif (Test-Path $artifacts) {
     # Alte Ergebnisse soweit möglich entfernen. Läuft IP-Switch gerade aus einem älteren Ausgabeordner, ist dessen
     # EXE gesperrt – dieser Ordner bleibt dann stehen. Das stört nicht, da jede Version eigene Ordnernamen hat.
     Remove-Item $artifacts -Recurse -Force -ErrorAction SilentlyContinue
-    if (Test-Path $artifacts) {
+    $selfContained = Join-Path $artifacts "publish\IPSwitch-$version-win-x64"
+$frameworkDependent = Join-Path $artifacts "publish\IPSwitch-$version-win-x64-net10"
+
+if ($Stage -eq 'Package') {
+    foreach ($dir in $selfContained, $frameworkDependent) {
+        if (-not (Test-Path (Join-Path $dir 'IPSwitch.exe'))) { throw "Veröffentlichte Dateien fehlen: $dir" }
+    }
+    Get-ChildItem $artifacts -File -ErrorAction SilentlyContinue | Remove-Item -Force
+}
+elseif (Test-Path $artifacts) {
         $locked = Get-ChildItem $artifacts -Recurse -File | Select-Object -ExpandProperty FullName
         Write-Warning ("Einige alte Dateien sind gesperrt und bleiben erhalten (läuft IP-Switch aus dem artifacts-Ordner?):`n  " +
             ($locked -join "`n  "))
@@ -59,24 +83,39 @@ if (Test-Path $artifacts) {
 }
 New-Item -ItemType Directory -Path $artifacts -Force | Out-Null
 
-if (-not $SkipTests) {
+if (-not $SkipTests -and $Stage -ne 'Package') {
     Invoke-Step 'Tests' { dotnet test (Join-Path $root 'tests\IPSwitch.Core.Tests\IPSwitch.Core.Tests.csproj') -c $Configuration --nologo }
 }
 
-$selfContained = Join-Path $artifacts "publish\IPSwitch-$version-win-x64"
-Invoke-Step 'Veröffentlichen (eigenständig, Single-File)' {
-    # Bewusst OHNE EnableCompressionInSingleFile: Komprimierte Bundles werden beim Start in den Arbeitsspeicher
-    # entpackt (gemessen ~120 MB statt ~53 MB Working Set). ZIP und MSI komprimieren die EXE ohnehin.
-    dotnet publish $app -c $Configuration -r win-x64 --self-contained true -o $selfContained --nologo `
-        -p:PublishSingleFile=true -p:IncludeNativeLibrariesForSelfExtract=true
+if ($Stage -ne 'Package') {
+    Invoke-Step 'Veröffentlichen (eigenständig, Single-File)' {
+        # Bewusst OHNE EnableCompressionInSingleFile: Komprimierte Bundles werden beim Start in den Arbeitsspeicher
+        # entpackt (gemessen ~120 MB statt ~53 MB Working Set). ZIP und MSI komprimieren die EXE ohnehin.
+        dotnet publish $app -c $Configuration -r win-x64 --self-contained true -o $selfContained --nologo `
+            -p:PublishSingleFile=true -p:IncludeNativeLibrariesForSelfExtract=true
+    }
+    Invoke-Step 'Veröffentlichen (framework-abhängig)' {
+        dotnet publish $app -c $Configuration -r win-x64 --self-contained false -o $frameworkDependent --nologo -p:PublishSingleFile=true
+    }
+    # Symboldateien sind in Release eingebettet; separate .pdb-Dateien werden nicht ausgeliefert.
+    Get-ChildItem $selfContained, $frameworkDependent -File -Filter *.pdb | Remove-Item -Force
 }
-New-Package $selfContained "IPSwitch-$version-win-x64.zip"
 
-$frameworkDependent = Join-Path $artifacts "publish\IPSwitch-$version-win-x64-net10"
-Invoke-Step 'Veröffentlichen (framework-abhängig)' {
-    dotnet publish $app -c $Configuration -r win-x64 --self-contained false -o $frameworkDependent --nologo -p:PublishSingleFile=true
+if ($Stage -eq 'Publish') {
+    Write-Host "`nVeröffentlicht nach $(Join-Path $artifacts 'publish')" -ForegroundColor Green
+    return
 }
-New-Package $frameworkDependent "IPSwitch-$version-win-x64-net10.zip"
+
+# Kopien verpacken, damit artifacts\publish nur die (ggf. signierten) EXE-Dateien enthält.
+$staging = Join-Path $artifacts 'staging'
+foreach ($dir in $selfContained, $frameworkDependent) {
+    $target = Join-Path $staging (Split-Path $dir -Leaf)
+    Remove-Item $target -Recurse -Force -ErrorAction SilentlyContinue
+    Copy-Item $dir $target -Recurse
+}
+New-Package (Join-Path $staging (Split-Path $selfContained -Leaf)) "IPSwitch-$version-win-x64.zip"
+New-Package (Join-Path $staging (Split-Path $frameworkDependent -Leaf)) "IPSwitch-$version-win-x64-net10.zip"
+Remove-Item $staging -Recurse -Force
 
 if (-not $SkipMsi) {
     try {
