@@ -5,7 +5,14 @@ version as release notes.
 
 ## [Unreleased]
 
-- Automated build, packaging and code signing with GitHub Actions and SignPath.
+## [1.5.0] - 2026-11-02
+
+- **Microsoft Store package:** `build-msix.ps1` builds an MSIX package for the Microsoft Store (signed by Microsoft,
+  updates itself). In the Store version Windows handles installation, updates and autostart
+  (*Settings › Apps › Startup*); profiles and settings of an existing desktop installation are taken over on first
+  start. Changes still ask for administrator rights via UAC.
+- Automated build, packaging and code signing with GitHub Actions and SignPath; the Store package is built as a
+  workflow artifact.
 - Code signing policy, privacy policy and security policy.
 - Screenshots in the README.
 
@@ -25,5 +32,6 @@ First public release.
 - Import and export of profiles (JSON), sample profiles.
 - Per-user MSI installer and portable ZIP packages.
 
-[Unreleased]: https://github.com/memoldinyo/IP-Switch/compare/v1.4.0...HEAD
+[Unreleased]: https://github.com/memoldinyo/IP-Switch/compare/v1.5.0...HEAD
+[1.5.0]: https://github.com/memoldinyo/IP-Switch/compare/v1.4.0...v1.5.0
 [1.4.0]: https://github.com/memoldinyo/IP-Switch/releases/tag/v1.4.0

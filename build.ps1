@@ -46,7 +46,7 @@ function New-Package([string]$publishDir, [string]$zipName) {
     Copy-Item (Join-Path $root 'docs') $publishDir -Recurse -Force
     Remove-Item (Join-Path $publishDir 'docs\screenshots') -Recurse -Force -ErrorAction SilentlyContinue
     Copy-Item (Join-Path $root 'samples') $publishDir -Recurse -Force
-    Copy-Item (Join-Path $root 'packaging\*') $publishDir -Force
+    Get-ChildItem (Join-Path $root 'packaging') -File | Copy-Item -Destination $publishDir -Force
     $zip = Join-Path $artifacts $zipName
     Remove-Item $zip -ErrorAction SilentlyContinue
     Compress-Archive -Path (Join-Path $publishDir '*') -DestinationPath $zip

@@ -71,7 +71,12 @@ internal sealed class TrayApplicationContext : ApplicationContext
         NetworkChange.NetworkAvailabilityChanged += OnNetworkChanged;
         _instance.Listen(() => _ui.Post(_ => ShowMainForm(), null));
 
-        Autostart.RefreshPathIfEnabled();
+        // Im Store-Paket regelt Windows den Autostart (StartupTask im Paketmanifest).
+        if (!AppPackage.IsPackaged)
+        {
+            Autostart.RefreshPathIfEnabled();
+        }
+
         if (_controller.Settings.AdminAutostart && SafeAutostartState())
         {
             // Z. B. nach einem MSI-Update wieder eingetragener normaler Autostart: würde mit der Aufgabe konkurrieren.
@@ -330,7 +335,18 @@ internal sealed class TrayApplicationContext : ApplicationContext
 
         var dataFolder = new ToolStripMenuItem(Loc.T("action.openDataFolder"));
         dataFolder.Click += (_, _) => Dialogs.OpenFolder(_controller.Paths.DataDirectory);
-        settings.DropDownItems.AddRange([showAll, notifications, new ToolStripSeparator(), autostart, adminAutostart]);
+        if (AppPackage.IsPackaged)
+        {
+            // Store-Paket: Autostart über Windows-Einstellungen › Apps › Autostart; eine geplante Aufgabe mit
+            // Administratorrechten ist für Paket-Apps nicht vorgesehen.
+            var manage = new ToolStripMenuItem(Loc.T("tray.autostartStore"));
+            manage.Click += (_, _) => Dialogs.OpenUri("ms-settings:startupapps");
+            settings.DropDownItems.AddRange([showAll, notifications, new ToolStripSeparator(), manage]);
+        }
+        else
+        {
+            settings.DropDownItems.AddRange([showAll, notifications, new ToolStripSeparator(), autostart, adminAutostart]);
+        }
         if (!_elevated && adminCapable)
         {
             var restart = new ToolStripMenuItem(Loc.T("tray.restartAdmin")) { Enabled = !busy };

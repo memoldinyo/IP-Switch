@@ -30,6 +30,16 @@ benannte Profile speichert und per Klick anwendet: statische Adresse, DHCP, Gate
 
 ## Download
 
+### Microsoft Store
+
+IP-Switch ist auf dem Weg in den Microsoft Store (verfügbar, sobald Microsoft die App geprüft hat). Die Store-Version
+ist von Microsoft signiert, installiert sich ohne Warnhinweis und aktualisiert sich selbst. Netzwerkänderungen fragen
+weiterhin nach Administratorrechten (UAC); den Autostart verwaltet man unter *Windows-Einstellungen › Apps ›
+Autostart*. Bitte entweder die Store-Version oder einen Download von GitHub nutzen, nicht beides – beim ersten Start
+übernimmt die Store-Version vorhandene Profile und Einstellungen.
+
+### GitHub
+
 Die aktuelle Version gibt es auf der [Release-Seite](https://github.com/memoldinyo/IP-Switch/releases/latest):
 
 | Datei | Beschreibung |
@@ -197,12 +207,14 @@ IPSwitch.sln
 ├─ tests/IPSwitch.Core.Tests/  xUnit-Tests (u. a. mit netsh-Simulator für Anwenden/Rollback)
 ├─ installer/                  WiX-Projekt für das MSI
 ├─ packaging/                  Installations-/Deinstallationsskripte für das ZIP-Paket
+│  └─ msix/                    Microsoft-Store-Paket: Manifest, Logos, Identität, Store-Texte, Anleitung
 ├─ samples/                    Beispielprofile
 ├─ tools/                      Erzeugung des Programmsymbols
 ├─ docs/                       Handbücher, Build- und Installationsanleitung, Screenshots
 ├─ .github/workflows/          CI: Tests, Pakete, Code-Signierung, Releases
 ├─ .signpath/                  SignPath-Artefaktkonfigurationen (Code-Signierung)
-└─ build.ps1                   Tests, Veröffentlichung, ZIP- und MSI-Pakete
+├─ build.ps1                   Tests, Veröffentlichung, ZIP- und MSI-Pakete
+└─ build-msix.ps1              Microsoft-Store-Paket (MSIX)
 ```
 
 ## Weitere Dokumentation

@@ -91,6 +91,19 @@ internal static class Dialogs
         }
     }
 
+    /// <summary>Öffnet eine Adresse wie "ms-settings:startupapps" mit der zuständigen Windows-App.</summary>
+    public static void OpenUri(string uri)
+    {
+        try
+        {
+            Process.Start(new ProcessStartInfo(uri) { UseShellExecute = true });
+        }
+        catch (Exception ex)
+        {
+            Error(null, Loc.T("dialog.openFailed", uri, ex.Message));
+        }
+    }
+
     private static T WithOwner<T>(IWin32Window? owner, Func<IWin32Window, T> show)
     {
         owner = Alive(owner);

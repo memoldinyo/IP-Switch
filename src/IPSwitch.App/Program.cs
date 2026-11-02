@@ -35,10 +35,26 @@ internal static class Program
 
         Log.Initialize(paths.LogDirectory);
 
+        if (AppPackage.IsPackaged)
+        {
+            try
+            {
+                if (paths.CopyFromIfEmpty(AppPaths.DesktopDataDirectory))
+                {
+                    Log.Info("Profile und Einstellungen der Desktop-Installation übernommen.");
+                }
+            }
+            catch (Exception ex)
+            {
+                Log.Warn("Daten der Desktop-Installation konnten nicht übernommen werden: " + ex.Message);
+            }
+        }
+
         // Beim automatischen Start kurz warten: So kann eine Instanz, die sich gerade für einen Neustart mit
         // Administratorrechten beendet, ihren Platz freigeben. Bei doppeltem Autostart (Run-Schlüssel und
         // geplante Aufgabe) beendet sich der zweite Start still.
-        var isAutostart = args.Contains(AutostartSwitch, StringComparer.OrdinalIgnoreCase);
+        // Store-Paket: Windows startet über den StartupTask ohne Argumente.
+        var isAutostart = args.Contains(AutostartSwitch, StringComparer.OrdinalIgnoreCase) || PackageActivation.IsStartupTask();
         using var instance = new SingleInstance("IPSwitch", isAutostart ? TimeSpan.FromSeconds(15) : TimeSpan.Zero);
         if (!instance.IsFirstInstance)
         {

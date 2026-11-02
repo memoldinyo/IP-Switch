@@ -45,6 +45,26 @@ public sealed class StorageTests : IDisposable
     }
 
     [Fact]
+    public void CopyFromIfEmpty_TakesOverDesktopDataOnlyOnce()
+    {
+        var desktop = Path.Combine(_dir, "desktop");
+        Directory.CreateDirectory(desktop);
+        File.WriteAllText(Path.Combine(desktop, "profiles.json"), "[]");
+        File.WriteAllText(Path.Combine(desktop, "settings.json"), "{}");
+        var store = new AppPaths(Path.Combine(_dir, "store"));
+        store.EnsureCreated();
+
+        Assert.True(store.CopyFromIfEmpty(desktop));
+        Assert.True(File.Exists(store.ProfilesFile));
+        Assert.True(File.Exists(store.SettingsFile));
+
+        File.WriteAllText(Path.Combine(desktop, "profiles.json"), "[{}]");
+        Assert.False(store.CopyFromIfEmpty(desktop));
+        Assert.Equal("[]", File.ReadAllText(store.ProfilesFile));
+        Assert.False(new AppPaths(desktop).CopyFromIfEmpty(desktop));
+    }
+
+    [Fact]
     public void Save_RejectsInvalidProfileWithoutWriting()
     {
         var store = NewStore();

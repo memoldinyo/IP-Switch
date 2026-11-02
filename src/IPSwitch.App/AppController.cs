@@ -19,6 +19,12 @@ internal sealed class AppController
     {
         Paths = paths;
         Settings = AppSettings.Load(paths.SettingsFile);
+        if (AppPackage.IsPackaged)
+        {
+            // Die geplante Aufgabe einer Desktop-Installation (übernommene Einstellungen) gilt nicht für das Store-Paket.
+            Settings.AdminAutostart = false;
+        }
+
         Loc.SetLanguage(Settings.Language);
         Profiles = new ProfileStore(paths.ProfilesFile);
         LoadError = Profiles.Load();

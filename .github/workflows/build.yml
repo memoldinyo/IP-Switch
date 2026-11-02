@@ -1,6 +1,6 @@
 # Build, test and package IP-Switch.
 #
-# Every push and pull request: tests + unsigned packages as workflow artifacts.
+# Every push and pull request: tests + unsigned packages and the Microsoft Store package (.msix) as workflow artifacts.
 # Tag "v<version>" (e.g. v1.5.0): the executables and the MSI are signed via SignPath (if configured)
 # and a GitHub release with all packages and SHA-256 checksums is created.
 #
@@ -120,6 +120,18 @@ jobs:
           path: |
             artifacts/*.zip
             artifacts/*.msi
+          if-no-files-found: error
+
+      # Microsoft Store package (unsigned, the Store signs it): uploaded to Partner Center, not part of the release.
+      - name: Build Store package
+        shell: pwsh
+        run: ./build-msix.ps1
+
+      - name: Upload Store package
+        uses: actions/upload-artifact@v7
+        with:
+          name: IPSwitch-${{ needs.build.outputs.version }}-msix
+          path: artifacts/*.msix
           if-no-files-found: error
 
   sign-installer:

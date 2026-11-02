@@ -109,6 +109,21 @@ Die Tests in `tests/IPSwitch.Core.Tests` laufen ohne Administratorrechte und än
 Das tatsächliche Anwenden über `netsh` benötigt Administratorrechte. Es ist deshalb nicht Teil der automatischen Tests
 und muss manuell geprüft werden (siehe [INSTALLATION.md](INSTALLATION.md#manueller-funktionstest)).
 
+## Microsoft-Store-Paket
+
+```powershell
+.\build.ps1
+.\build-msix.ps1
+```
+
+erzeugt `artifacts\IPSwitch-<Version>-x64.msix` aus der eigenständigen EXE (Manifest, Logos und Identität in
+`packaging\msix`). `makeappx`/`makepri` kommen aus dem installierten Windows SDK oder werden aus dem NuGet-Paket
+`Microsoft.Windows.SDK.BuildTools` geladen. Ausprobieren als Test-App (Entwicklermodus):
+`powershell -ExecutionPolicy Bypass -File tools\Test-Msix.ps1` (`-Remove` entfernt sie). Einreichen:
+[packaging/msix/EINREICHEN.md](../packaging/msix/EINREICHEN.md).
+
+Die Store-Logos erzeugt `tools\New-AppIcon.ps1` zusammen mit dem Programmsymbol.
+
 ## Continuous Integration und Code-Signatur
 
 Der Workflow [`.github/workflows/build.yml`](../.github/workflows/build.yml) baut und testet jeden Push und Pull
