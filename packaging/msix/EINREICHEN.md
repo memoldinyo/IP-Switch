@@ -1,5 +1,6 @@
 # IP-Switch im Microsoft Store einreichen
 
+App: **IP-Switch**, Store-ID `9N2Z0ZZSHM6S`, Paketfamilie `MkMone.IP-Switch_wfjt2twyn1pza`,
 Herausgeber `MkMone` (dasselbe Partner-Center-Konto wie Kahraman). Identität und reservierter App-Name stehen in
 [`identity.json`](identity.json) – aus *Partner Center › Product management › Product identity*.
 
