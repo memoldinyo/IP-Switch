@@ -13,6 +13,7 @@ namespace IPSwitch.App.Elevation;
 /// <list type="bullet">
 /// <item><c>--apply &lt;Auftrag&gt; "&lt;Ergebnis&gt;"</c> – Konfiguration anwenden (inkl. Sicherung und Rollback)</item>
 /// <item><c>--admin-autostart enable|disable &lt;SID&gt; &lt;Sprache&gt; "&lt;Ergebnis&gt;"</c> – geplante Aufgabe anlegen/entfernen</item>
+/// <item><c>--adapter-state enable|disable &lt;GUID&gt; &lt;Sprache&gt; "&lt;Ergebnis&gt;"</c> – Netzwerkadapter aktivieren/deaktivieren</item>
 /// </list>
 /// </summary>
 internal static class ElevatedHelper
@@ -43,6 +44,10 @@ internal static class ElevatedHelper
             else if (args[0] == ElevatedProtocol.AdminAutostartSwitch && args.Length == 5)
             {
                 result = RunAdminAutostart(args[1], args[2]);
+            }
+            else if (args[0] == ElevatedProtocol.AdapterStateSwitch && args.Length == 5 && args[1] is "enable" or "disable")
+            {
+                result = AdapterStateChanger.CreateDefault().SetEnabled(args[2], args[1] == "enable");
             }
             else if (request is not null)
             {

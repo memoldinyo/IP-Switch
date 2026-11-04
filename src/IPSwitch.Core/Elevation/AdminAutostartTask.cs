@@ -129,8 +129,66 @@ public sealed class AdminAutostartTask
 
     public bool Exists(string userSid) => Run(["/Query", "/TN", TaskName(userSid)]).Succeeded;
 
-    /// <summary>Startet die Aufgabe sofort (z. B. für einen Neustart mit Administratorrechten).</summary>
-    public bool TryStart(string userSid) => Run(["/Run", "/TN", TaskName(userSid)]).Succeeded;
+    /// <summary>Programmpfad, den die Aufgabe startet, oder null (Aufgabe fehlt oder ist nicht lesbar).</summary>
+    public string? GetExecutable(string userSid)
+    {
+        if (!ElevationInfo.IsValidSid(userSid))
+        {
+            return null;
+        }
+
+        var result = Run(["/Query", "/TN", TaskName(userSid), "/XML"]);
+        return result.Succeeded ? ParseCommand(result.Output) : null;
+    }
+
+    /// <summary>
+    /// Startet die Aufgabe sofort (Neustart mit Administratorrechten ohne UAC-Abfrage) – aber nur, wenn sie genau
+    /// dieses Programm startet. Sonst liefe z. B. eine ältere Installation an einem anderen Ort.
+    /// </summary>
+    public bool TryStart(string userSid, string executablePath)
+    {
+        var target = GetExecutable(userSid);
+        if (target is null || !SamePath(target, executablePath))
+        {
+            Log.Info($"Geplante Aufgabe wird nicht verwendet: startet \"{target ?? "–"}\" statt \"{executablePath}\".");
+            return false;
+        }
+
+        return Run(["/Run", "/TN", TaskName(userSid)]).Succeeded;
+    }
+
+    /// <summary>Liest den Befehl (Command) aus der Aufgaben-XML von <c>schtasks /Query /XML</c>.</summary>
+    public static string? ParseCommand(string output)
+    {
+        var start = output.IndexOf('<');
+        var end = output.LastIndexOf('>');
+        if (start < 0 || end <= start)
+        {
+            return null;
+        }
+
+        try
+        {
+            var command = XDocument.Parse(output[start..(end + 1)]).Descendants(Ns + "Command").FirstOrDefault()?.Value;
+            return string.IsNullOrWhiteSpace(command) ? null : Environment.ExpandEnvironmentVariables(command.Trim().Trim('"'));
+        }
+        catch (System.Xml.XmlException)
+        {
+            return null;
+        }
+    }
+
+    public static bool SamePath(string a, string b)
+    {
+        try
+        {
+            return string.Equals(Path.GetFullPath(a), Path.GetFullPath(b), StringComparison.OrdinalIgnoreCase);
+        }
+        catch (Exception ex) when (ex is ArgumentException or NotSupportedException or PathTooLongException)
+        {
+            return false;
+        }
+    }
 
     private CommandResult Run(IReadOnlyList<string> arguments)
     {

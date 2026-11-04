@@ -2,7 +2,9 @@
 
 Texts for Partner Center › Submission › Store listings, one section per language of the package
 (`en-US`, `de-DE`, `tr-TR`, `fr-FR`, `it-IT`, `ar-SA`, `zh-CN`, `ru-RU`). Screenshots (1920×1080) are in
-[`screenshots/`](screenshots/): `1-light-<lang>.png`, `2-dark-<lang>.png`, `3-tray-<lang>.png`.
+[`screenshots/`](screenshots/): `1-light-<lang>.png`, `2-dark-<lang>.png`, `3-tray-<lang>.png`, `4-adapter-<lang>.png`.
+
+For an update only **What's new in this version** (and the new feature line) changes; all other texts stay as they are.
 
 Same for every language:
 
@@ -31,6 +33,7 @@ Before every change IP-Switch backs up the current configuration, verifies the r
 - One-click profiles: static IP, subnet mask or prefix, gateway and DNS – or DHCP
 - Assign profiles to adapters and apply them directly from the tray menu
 - Overview of all network adapters with status, addresses, gateway and DNS
+- Turn network adapters off and on – disabled adapters are marked with a red dot
 - Backup before every change, verification and automatic rollback
 - Live validation with clear messages, e.g. gateway outside the subnet or address already in use
 - Import and export of profiles (JSON)
@@ -41,7 +44,7 @@ Before every change IP-Switch backs up the current configuration, verifies the r
 **Keywords** ip changer, ip switcher, static ip, dhcp, network profile, network adapter, dns
 
 **What's new in this version**
-First version in the Microsoft Store.
+Version 1.6.0: Turn network adapters off and on directly in IP-Switch – in the manager window and in the tray menu. Disabled adapters are now listed with a red status dot. Messages and the tray menu follow dark mode. Restarting with administrator rights always starts the current version, and the app uses less memory in the background.
 
 ---
 
@@ -59,6 +62,7 @@ Vor jeder Änderung sichert IP-Switch die aktuelle Konfiguration, prüft das Erg
 - Profile per Klick: statische IP, Subnetzmaske oder Präfix, Gateway und DNS – oder DHCP
 - Profile Adaptern zuordnen und direkt aus dem Tray-Menü anwenden
 - Übersicht aller Netzwerkadapter mit Status, Adressen, Gateway und DNS
+- Netzwerkadapter aus- und einschalten – deaktivierte Adapter sind mit einem roten Punkt markiert
 - Sicherung vor jeder Änderung, Überprüfung und automatischer Rollback
 - Prüfung schon bei der Eingabe mit klaren Meldungen, z. B. Gateway außerhalb des Subnetzes oder Adresse bereits vergeben
 - Import und Export von Profilen (JSON)
@@ -69,7 +73,7 @@ Vor jeder Änderung sichert IP-Switch die aktuelle Konfiguration, prüft das Erg
 **Suchbegriffe** IP ändern, IP-Adresse, statische IP, DHCP, Netzwerkprofil, Netzwerkadapter, DNS
 
 **Neu in dieser Version**
-Erste Version im Microsoft Store.
+Version 1.6.0: Netzwerkadapter direkt in IP-Switch aus- und einschalten – im Verwaltungsfenster und im Tray-Menü. Deaktivierte Adapter werden jetzt mit rotem Statuspunkt angezeigt. Meldungen und Tray-Menü folgen dem Dunkelmodus. Der Neustart mit Administratorrechten startet immer die aktuelle Version, und im Hintergrund braucht die App weniger Speicher.
 
 ---
 
@@ -87,6 +91,7 @@ IP-Switch her değişiklikten önce mevcut yapılandırmayı yedekler, sonucu do
 - Tek tıkla profiller: statik IP, alt ağ maskesi veya önek, ağ geçidi ve DNS – ya da DHCP
 - Profilleri bağdaştırıcılara atayın ve doğrudan tepsi menüsünden uygulayın
 - Tüm ağ bağdaştırıcılarının durum, adres, ağ geçidi ve DNS ile genel görünümü
+- Ağ bağdaştırıcılarını kapatıp açın – devre dışı bağdaştırıcılar kırmızı noktayla işaretlenir
 - Her değişiklikten önce yedekleme, doğrulama ve otomatik geri alma
 - Anlaşılır mesajlarla anında doğrulama, ör. alt ağ dışındaki ağ geçidi veya kullanımda olan adres
 - Profilleri içe ve dışa aktarma (JSON)
@@ -97,7 +102,7 @@ IP-Switch her değişiklikten önce mevcut yapılandırmayı yedekler, sonucu do
 **Anahtar kelimeler** ip değiştirici, ip adresi, statik ip, dhcp, ağ profili, ağ bağdaştırıcısı, dns
 
 **Bu sürümdeki yenilikler**
-Microsoft Store'daki ilk sürüm.
+Sürüm 1.6.0: Ağ bağdaştırıcılarını doğrudan IP-Switch'te kapatıp açın – yönetim penceresinde ve tepsi menüsünde. Devre dışı bağdaştırıcılar artık kırmızı durum noktasıyla listelenir. Mesajlar ve tepsi menüsü koyu modu izler. Yönetici haklarıyla yeniden başlatma her zaman güncel sürümü başlatır ve uygulama arka planda daha az bellek kullanır.
 
 ---
 
@@ -115,6 +120,7 @@ Avant chaque modification, IP-Switch sauvegarde la configuration actuelle, véri
 - Profils en un clic : IP statique, masque ou préfixe, passerelle et DNS – ou DHCP
 - Associez des profils aux cartes réseau et appliquez-les depuis le menu de la zone de notification
 - Vue d'ensemble de toutes les cartes réseau avec état, adresses, passerelle et DNS
+- Désactivez et réactivez les cartes réseau – les cartes désactivées sont signalées par un point rouge
 - Sauvegarde avant chaque modification, vérification et restauration automatique
 - Validation immédiate avec des messages clairs, p. ex. passerelle hors du sous-réseau ou adresse déjà utilisée
 - Import et export de profils (JSON)
@@ -125,7 +131,7 @@ Avant chaque modification, IP-Switch sauvegarde la configuration actuelle, véri
 **Mots-clés** changer ip, adresse ip, ip statique, dhcp, profil réseau, carte réseau, dns
 
 **Nouveautés de cette version**
-Première version dans le Microsoft Store.
+Version 1.6.0 : désactivez et réactivez les cartes réseau directement dans IP-Switch – dans la fenêtre de gestion et dans le menu de la zone de notification. Les cartes désactivées sont désormais affichées avec un point d'état rouge. Les messages et le menu suivent le mode sombre. Le redémarrage avec droits d'administrateur lance toujours la version actuelle, et l'application utilise moins de mémoire en arrière-plan.
 
 ---
 
@@ -143,6 +149,7 @@ Prima di ogni modifica IP-Switch salva la configurazione attuale, verifica il ri
 - Profili con un clic: IP statico, subnet mask o prefisso, gateway e DNS – oppure DHCP
 - Assegna i profili alle schede di rete e applicali dal menu dell'area di notifica
 - Panoramica di tutte le schede di rete con stato, indirizzi, gateway e DNS
+- Disattiva e riattiva le schede di rete – le schede disattivate sono contrassegnate da un punto rosso
 - Backup prima di ogni modifica, verifica e ripristino automatico
 - Controllo immediato con messaggi chiari, ad es. gateway fuori dalla subnet o indirizzo già in uso
 - Importazione ed esportazione dei profili (JSON)
@@ -153,7 +160,7 @@ Prima di ogni modifica IP-Switch salva la configurazione attuale, verifica il ri
 **Parole chiave** cambiare ip, indirizzo ip, ip statico, dhcp, profilo di rete, scheda di rete, dns
 
 **Novità di questa versione**
-Prima versione nel Microsoft Store.
+Versione 1.6.0: disattiva e riattiva le schede di rete direttamente in IP-Switch – nella finestra di gestione e nel menu dell'area di notifica. Le schede disattivate ora compaiono con un punto di stato rosso. I messaggi e il menu seguono la modalità scura. Il riavvio con diritti di amministratore avvia sempre la versione attuale e l'app usa meno memoria in background.
 
 ---
 
@@ -171,6 +178,7 @@ IP-Switch تطبيق خفيف في منطقة الإعلامات لكل من ي�
 - ملفات تعريف بنقرة واحدة: IP ثابت وقناع الشبكة الفرعية أو البادئة والبوابة وDNS – أو DHCP
 - اربط ملفات التعريف بالمحولات وطبّقها مباشرة من قائمة منطقة الإعلامات
 - نظرة عامة على جميع محولات الشبكة مع الحالة والعناوين والبوابة وDNS
+- إيقاف محولات الشبكة وتشغيلها – تُميَّز المحولات المعطّلة بنقطة حمراء
 - نسخة احتياطية قبل كل تغيير، وتحقق، واستعادة تلقائية
 - تحقق فوري برسائل واضحة، مثل بوابة خارج الشبكة الفرعية أو عنوان مستخدم بالفعل
 - استيراد ملفات التعريف وتصديرها (JSON)
@@ -181,7 +189,7 @@ IP-Switch تطبيق خفيف في منطقة الإعلامات لكل من ي�
 **الكلمات المفتاحية** تغيير IP، عنوان IP، IP ثابت، DHCP، ملف تعريف الشبكة، محول الشبكة، DNS
 
 **الجديد في هذا الإصدار**
-أول إصدار في Microsoft Store.
+الإصدار 1.6.0: أوقف محولات الشبكة وشغّلها مباشرة في IP-Switch – في نافذة الإدارة وفي قائمة منطقة الإعلامات. تظهر المحولات المعطّلة الآن بنقطة حالة حمراء. تتبع الرسائل والقائمة الوضع الداكن. إعادة التشغيل بصلاحيات المسؤول تشغّل دائمًا الإصدار الحالي، ويستهلك التطبيق ذاكرة أقل في الخلفية.
 
 ---
 
@@ -199,6 +207,7 @@ IP-Switch 是一款轻量的通知区域（托盘）应用，适合经常更改�
 - 一键配置文件：静态 IP、子网掩码或前缀、网关和 DNS——或 DHCP
 - 将配置文件分配给适配器，并直接从托盘菜单应用
 - 所有网络适配器一览：状态、地址、网关和 DNS
+- 禁用和启用网络适配器——已禁用的适配器以红点标记
 - 每次更改前自动备份，更改后验证，出错时自动回滚
 - 输入时即时检查并给出清晰提示，例如网关不在子网内或地址已被占用
 - 导入和导出配置文件（JSON）
@@ -209,7 +218,7 @@ IP-Switch 是一款轻量的通知区域（托盘）应用，适合经常更改�
 **关键字** IP 切换, IP 地址, 静态 IP, DHCP, 网络配置文件, 网络适配器, DNS
 
 **此版本的新增功能**
-Microsoft Store 中的第一个版本。
+版本 1.6.0：直接在 IP-Switch 中禁用和启用网络适配器——可在管理窗口和托盘菜单中操作。已禁用的适配器现在会以红色状态点显示。消息和托盘菜单支持深色模式。以管理员权限重新启动时始终启动当前版本，应用在后台占用的内存也更少。
 
 ---
 
@@ -227,6 +236,7 @@ IP-Switch – лёгкое приложение для области уведо
 - Профили одним щелчком: статический IP, маска подсети или префикс, шлюз и DNS – или DHCP
 - Назначение профилей адаптерам и применение прямо из меню в области уведомлений
 - Обзор всех сетевых адаптеров: состояние, адреса, шлюз и DNS
+- Выключение и включение сетевых адаптеров – выключенные адаптеры отмечены красной точкой
 - Резервная копия перед каждым изменением, проверка и автоматический откат
 - Проверка при вводе с понятными сообщениями, например шлюз вне подсети или адрес уже используется
 - Импорт и экспорт профилей (JSON)
@@ -237,4 +247,4 @@ IP-Switch – лёгкое приложение для области уведо
 **Ключевые слова** смена ip, ip-адрес, статический ip, dhcp, сетевой профиль, сетевой адаптер, dns
 
 **Что нового в этой версии**
-Первая версия в Microsoft Store.
+Версия 1.6.0: выключайте и включайте сетевые адаптеры прямо в IP-Switch – в окне управления и в меню области уведомлений. Выключенные адаптеры теперь отображаются с красной точкой состояния. Сообщения и меню поддерживают тёмную тему. Перезапуск с правами администратора всегда запускает текущую версию, а в фоне приложение расходует меньше памяти.

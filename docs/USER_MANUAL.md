@@ -73,9 +73,9 @@ Set up quick access                  ▸   profile ▸ assign adapter
 ● Ethernet  10.0.0.5/24 (Static)       ▸     Apply profile “…”
 More adapters (7)                    ▸     Apply another profile ▸
 ──────────────────────────────             Enable DHCP (IP and DNS)
-Open manager …                             Save current configuration as profile …
-New profile …                              Restore latest backup
-──────────────────────────────
+Open manager …                             Disable adapter
+New profile …                              Save current configuration as profile …
+──────────────────────────────             Restore latest backup
 Settings                             ▸
 Help
 About IP-Switch
@@ -95,8 +95,8 @@ Exit
 | **Header card (top left)** | Title, **New profile**, Edit, Duplicate, Delete, gear (Import, Export, data folder, Help, About) and **?** (Help). |
 | **Profile row** | Number of profiles, search box, **+ New** and **⋯** (Import, Export, data folder). |
 | **Profile tiles (left)** | Each tile shows IP/prefix, gateway, mode, DNS and – if present – the assigned adapter. **⋮** at the bottom right opens the profile menu. |
-| **Assign profile to: (right)** | Target adapter, **Refresh**, current adapter configuration (with **Details**, **Save as profile**, **Backups**), **Enable DHCP** and **Apply profile now**. |
-| **Adapters (bottom)** | All adapters as tiles with status, address and mode. A click selects the target adapter. Further adapters are behind **+ N more**. |
+| **Assign profile to: (right)** | Target adapter, **Disable/Enable adapter**, **Refresh**, current adapter configuration (with **Details**, **Save as profile**, **Backups**), **Enable DHCP** and **Apply profile now**. |
+| **Adapters (bottom)** | All adapters as tiles with status (dot: green = connected, grey = disconnected, red = disabled), address and mode. A click selects the target adapter. Further adapters are behind **+ N more**. |
 
 The **⋮ menu** of a profile tile (also via right-click or the menu key) contains:
 
@@ -146,6 +146,11 @@ for confirmation. The status line below shows in advance which profile will be a
 
 **Enable DHCP** switches IP address and DNS servers of the target adapter to automatic. IP-Switch also removes old
 static addresses and gateways that Windows would otherwise keep active.
+
+**Disable adapter** (next to **Refresh** or in the adapter's tray submenu) turns the target adapter off – like
+*Disable* in Windows Network Connections; IP-Switch asks for confirmation first. The IP configuration is kept and the
+status dot turns red. **Enable adapter** turns it back on. Like every change this needs administrator rights (UAC
+prompt). Profiles cannot be applied to a disabled adapter.
 
 **Sequence of a change:**
 

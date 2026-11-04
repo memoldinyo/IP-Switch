@@ -62,6 +62,7 @@ internal sealed class ModernButton : Button
 {
     private bool _hover;
     private bool _pressed;
+    private Font? _glyphFont;
 
     public ModernButton()
     {
@@ -86,6 +87,10 @@ internal sealed class ModernButton : Button
     [System.ComponentModel.DesignerSerializationVisibility(System.ComponentModel.DesignerSerializationVisibility.Hidden)]
     public int MinimumHeight { get; set; } = 34;
 
+    /// <summary>Mindestbreite in logischen Pixeln (96 dpi), z. B. für OK/Ja/Nein in Dialogen.</summary>
+    [System.ComponentModel.DesignerSerializationVisibility(System.ComponentModel.DesignerSerializationVisibility.Hidden)]
+    public int MinimumWidth { get; set; }
+
     public override Size GetPreferredSize(Size proposedSize)
     {
         var height = LogicalToDeviceUnits(MinimumHeight);
@@ -101,7 +106,7 @@ internal sealed class ModernButton : Button
             width += TextRenderer.MeasureText(Text, Font).Width + (string.IsNullOrEmpty(Glyph) ? 0 : LogicalToDeviceUnits(8));
         }
 
-        return new Size(Math.Max(width, height), height);
+        return new Size(Math.Max(Math.Max(width, height), LogicalToDeviceUnits(MinimumWidth)), height);
     }
 
     protected override void OnMouseEnter(EventArgs e)
@@ -181,8 +186,7 @@ internal sealed class ModernButton : Button
 
         if (glyphWidth > 0)
         {
-            using var glyphFont = new Font(Theme.GlyphFamily, Font.SizeInPoints * 1.05f, GraphicsUnit.Point);
-            TextRenderer.DrawText(g, Glyph, glyphFont, new Rectangle(x, 0, glyphWidth, Height), fore,
+            TextRenderer.DrawText(g, Glyph, GlyphFont(), new Rectangle(x, 0, glyphWidth, Height), fore,
                 TextFormatFlags.HorizontalCenter | TextFormatFlags.VerticalCenter | TextFormatFlags.NoPadding);
         }
 
@@ -194,6 +198,30 @@ internal sealed class ModernButton : Button
     }
 
     private int GlyphSize() => LogicalToDeviceUnits((int)Math.Ceiling(Font.SizeInPoints * 1.6));
+
+    /// <summary>Symbolschrift passend zur Textgröße – zwischengespeichert statt bei jedem Zeichnen neu erzeugt.</summary>
+    private Font GlyphFont()
+    {
+        var size = Font.SizeInPoints * 1.05f;
+        if (_glyphFont is null || Math.Abs(_glyphFont.SizeInPoints - size) > 0.01f)
+        {
+            _glyphFont?.Dispose();
+            _glyphFont = new Font(Theme.GlyphFamily, size, GraphicsUnit.Point);
+        }
+
+        return _glyphFont;
+    }
+
+    protected override void Dispose(bool disposing)
+    {
+        if (disposing)
+        {
+            _glyphFont?.Dispose();
+            _glyphFont = null;
+        }
+
+        base.Dispose(disposing);
+    }
 
     private (Color Back, Color Fore, Color? Border) ResolveColors(Palette p, Color parentBack)
     {

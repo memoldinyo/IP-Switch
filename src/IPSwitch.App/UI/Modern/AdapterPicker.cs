@@ -54,7 +54,7 @@ internal sealed class AdapterPicker : ComboBox
         var dot = LogicalToDeviceUnits(8);
         var x = e.Bounds.X + LogicalToDeviceUnits(8);
         g.SmoothingMode = SmoothingMode.AntiAlias;
-        using (var dotBrush = new SolidBrush(adapter.IsConnected ? p.Connected : p.Disconnected))
+        using (var dotBrush = new SolidBrush(Theme.StatusColor(adapter)))
         {
             g.FillEllipse(dotBrush, x, e.Bounds.Y + ((e.Bounds.Height - dot) / 2), dot, dot);
         }

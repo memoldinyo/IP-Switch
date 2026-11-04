@@ -17,7 +17,14 @@ public static class ElevatedProtocol
 
     /// <summary><c>IPSwitch.exe --admin-autostart enable|disable &lt;Benutzer-SID&gt; &lt;Sprache&gt; "&lt;Ergebnisdatei&gt;"</c></summary>
     public const string AdminAutostartSwitch = "--admin-autostart";
+
+    /// <summary><c>IPSwitch.exe --adapter-state enable|disable &lt;Interface-GUID&gt; &lt;Sprache&gt; "&lt;Ergebnisdatei&gt;"</c></summary>
+    public const string AdapterStateSwitch = "--adapter-state";
     private const int MaxEncodedLength = 16 * 1024;
+
+    /// <summary>true, wenn das erste Argument einen Auftrag an den Hilfsprozess einleitet (statt die Tray-Anwendung zu starten).</summary>
+    public static bool IsHelperSwitch(string? argument) =>
+        argument is ApplySwitch or AdminAutostartSwitch or AdapterStateSwitch;
 
     public static string EncodeRequest(ApplyRequest request) =>
         Convert.ToBase64String(JsonSerializer.SerializeToUtf8Bytes(request, JsonFile.CompactOptions))
@@ -42,6 +49,9 @@ public static class ElevatedProtocol
 
     public static string BuildAdminAutostartArguments(bool enable, string userSid, string language, string resultFile) =>
         $"{AdminAutostartSwitch} {(enable ? "enable" : "disable")} {userSid} {language} \"{resultFile}\"";
+
+    public static string BuildAdapterStateArguments(bool enable, string interfaceId, string language, string resultFile) =>
+        $"{AdapterStateSwitch} {(enable ? "enable" : "disable")} {interfaceId} {language} \"{resultFile}\"";
 
     /// <summary>Prüft den Ergebnispfad: vollqualifiziert, .json-Endung, keine Anführungszeichen.</summary>
     public static bool IsValidResultPath(string? path) =>

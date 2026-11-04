@@ -143,6 +143,10 @@ internal static class Theme
         }
     }
 
+    /// <summary>Statuspunkt eines Adapters: grün = verbunden, rot = deaktiviert, grau = getrennt.</summary>
+    public static Color StatusColor(IPSwitch.Core.Models.AdapterInfo adapter) =>
+        adapter.IsConnected ? Current.Connected : adapter.IsDisabled ? Current.Danger : Current.Disconnected;
+
     public static Color Blend(Color a, Color b, double amount) => Color.FromArgb(
         (int)(a.R + ((b.R - a.R) * amount)),
         (int)(a.G + ((b.G - a.G) * amount)),
@@ -334,6 +338,10 @@ internal static class Glyphs
     public const string Link = "";
     public const string Help = "";
     public const string Book = "";
+    public const string Power = "";
+    public const string CheckMark = "";
+    public const string Error = "";
+    public const string Question = "";
 
     public static string ForAdapter(IPSwitch.Core.Models.AdapterInfo adapter) => adapter.InterfaceType switch
     {

@@ -48,7 +48,10 @@ public sealed class AdapterInfo
 
     public bool IsConnected => Status == OperationalStatus.Up;
 
-    public string StatusText => Status switch
+    /// <summary>Adapter ist deaktiviert (Gerät abgeschaltet, kein IPv4 gebunden).</summary>
+    public bool IsDisabled { get; init; }
+
+    public string StatusText => IsDisabled ? Loc.T("status.disabled") : Status switch
     {
         OperationalStatus.Up => Loc.T("status.up"),
         OperationalStatus.Down => Loc.T("status.down"),

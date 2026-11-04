@@ -29,6 +29,40 @@ internal sealed class ModernMenuRenderer : ToolStripProfessionalRenderer
         base.OnRenderArrow(e);
     }
 
+    /// <summary>Häkchen als Symbol in Textfarbe – das Standardhäkchen ist immer schwarz und im dunklen Schema unsichtbar.</summary>
+    protected override void OnRenderItemCheck(ToolStripItemImageRenderEventArgs e)
+    {
+        var p = Theme.Current;
+        var box = Rectangle.Inflate(e.ImageRectangle, 2, 2);
+        using (var back = new SolidBrush(e.Item.Selected ? p.SubtleHover : p.Subtle))
+        using (var path = Theme.RoundedRect(box, 3))
+        {
+            e.Graphics.SmoothingMode = System.Drawing.Drawing2D.SmoothingMode.AntiAlias;
+            e.Graphics.FillPath(back, path);
+        }
+
+        using var font = new Font(Theme.GlyphFamily, 8f, GraphicsUnit.Point);
+        TextRenderer.DrawText(e.Graphics, Glyphs.CheckMark, font, box, e.Item.Enabled ? p.Text : p.TextSecondary,
+            TextFormatFlags.HorizontalCenter | TextFormatFlags.VerticalCenter | TextFormatFlags.NoPadding);
+    }
+
+    /// <summary>Setzt den Renderer auch für alle Untermenüs (sie verwenden sonst die hellen Windows-Farben).</summary>
+    public static void ApplyTo(ToolStrip strip)
+    {
+        var renderer = new ModernMenuRenderer();
+        strip.Renderer = renderer;
+        Apply(strip.Items);
+
+        void Apply(ToolStripItemCollection items)
+        {
+            foreach (var item in items.OfType<ToolStripMenuItem>().Where(i => i.HasDropDownItems))
+            {
+                item.DropDown.Renderer = renderer;
+                Apply(item.DropDownItems);
+            }
+        }
+    }
+
     private sealed class MenuColors(Palette p) : ProfessionalColorTable
     {
         public override Color ToolStripDropDownBackground => p.Card;

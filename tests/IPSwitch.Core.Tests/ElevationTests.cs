@@ -106,6 +106,46 @@ public class ElevationTests
     }
 
     [Fact]
+    public void ParseCommand_ReadsExecutableFromQueryXml()
+    {
+        var xml = AdminAutostartTask.BuildXml(Sid, @"C:\Users\x\AppData\Local\Programs\IP-Switch\IPSwitch.exe");
+        Assert.Equal(@"C:\Users\x\AppData\Local\Programs\IP-Switch\IPSwitch.exe", AdminAutostartTask.ParseCommand(xml + "\r\n"));
+        Assert.Null(AdminAutostartTask.ParseCommand("FEHLER: Das System kann die angegebene Datei nicht finden."));
+    }
+
+    [Fact]
+    public void TryStart_OnlyRunsTaskThatStartsThisExecutable()
+    {
+        const string current = @"C:\Neu\IPSwitch.exe";
+        var oldXml = AdminAutostartTask.BuildXml(Sid, @"C:\Alt\IPSwitch.exe");
+        var runner = new RecordingRunner();
+        var task = new AdminAutostartTask(new XmlRunner(runner, oldXml), "schtasks.exe");
+
+        Assert.False(task.TryStart(Sid, current));
+        Assert.DoesNotContain(runner.Calls, c => c.StartsWith("/Run"));
+
+        var sameXml = AdminAutostartTask.BuildXml(Sid, current);
+        var ok = new AdminAutostartTask(new XmlRunner(runner, sameXml), "schtasks.exe");
+        Assert.True(ok.TryStart(Sid, @"c:\neu\IPSWITCH.exe"));
+        Assert.Contains(runner.Calls, c => c.StartsWith("/Run"));
+    }
+
+    /// <summary>Liefert bei /Query /XML die angegebene Aufgaben-XML, sonst wie der aufgezeichnete Runner.</summary>
+    private sealed class XmlRunner(RecordingRunner inner, string xml) : ICommandRunner
+    {
+        public CommandResult Run(string fileName, IReadOnlyList<string> arguments, TimeSpan timeout)
+        {
+            if (arguments.Contains("/Query") && arguments.Contains("/XML"))
+            {
+                inner.Calls.Add(string.Join(' ', arguments));
+                return new CommandResult(0, xml);
+            }
+
+            return inner.Run(fileName, arguments, timeout);
+        }
+    }
+
+    [Fact]
     public void TaskName_IsPerUser() =>
         Assert.NotEqual(AdminAutostartTask.TaskName(Sid), AdminAutostartTask.TaskName("S-1-5-21-1-2-3-1002"));
 

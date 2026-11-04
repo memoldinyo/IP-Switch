@@ -26,6 +26,10 @@ benannte Profile speichert und per Klick anwendet: statische Adresse, DHCP, Gate
 
 ![Tray-Kontextmenü mit Adapter-Untermenü](docs/screenshots/tray-menu-de.png)
 
+**Adapter deaktivieren** – roter Statuspunkt bei deaktivierten Adaptern, Bestätigung im eigenen (dunklen) Dialog:
+
+![Bestätigung vor dem Deaktivieren eines Netzwerkadapters](docs/screenshots/disable-adapter-de.png)
+
 <sub>Dargestellt mit Beispielprofilen und Beispieladaptern.</sub>
 
 ## Download
@@ -58,10 +62,11 @@ Prüfsummen: `SHA256SUMS.txt` in jedem Release.
 
 | Bereich | Funktion |
 |---|---|
-| Adapter | Erkennt alle Netzwerkadapter mit IPv4. Zeigt Status, Typ, Geschwindigkeit, MAC, Kennung (GUID), aktive **und** gespeicherte IPv4-Konfiguration (Adresse/Präfix, Gateway, DNS, DHCP-Server). |
+| Adapter | Erkennt alle Netzwerkadapter mit IPv4, auch deaktivierte. Statuspunkt: grün = verbunden, grau = getrennt, rot = deaktiviert. Zeigt Status, Typ, Geschwindigkeit, MAC, Kennung (GUID), aktive **und** gespeicherte IPv4-Konfiguration (Adresse/Präfix, Gateway, DNS, DHCP-Server). |
 | Profile | Anlegen, Bearbeiten, Duplizieren, Löschen, Importieren, Exportieren (JSON). |
 | Zuordnung | Profile können einem Adapter zugeordnet werden, im Profileditor oder direkt im Tray-Menü unter *Schnellzugriff einrichten*. Zugeordnete Profile erscheinen im Tray-Menü als Schnellzugriff. |
 | Anwenden | Aus dem Tray-Menü (ein Klick) oder aus dem Verwaltungsfenster. Zusätzlich „DHCP aktivieren“ für IP und DNS. |
+| Adapter ein/aus | „Adapter deaktivieren“ / „Adapter aktivieren“ im Verwaltungsfenster und im Tray-Untermenü – wie in den Windows-Netzwerkverbindungen; die IP-Konfiguration bleibt erhalten. |
 | Erfassen | „Aktuelle Konfiguration als Profil speichern“ übernimmt die Werte eines Adapters in ein neues Profil. Neue Daten lassen sich direkt erfassen und mit „Speichern und anwenden“ sofort setzen. |
 | Sicherheit | Sicherung vor jeder Änderung, Überprüfung danach, automatischer Rollback bei Fehlern. „Letzte Sicherung wiederherstellen“ und eine Liste aller Sicherungen pro Adapter. |
 | Validierung | Live-Prüfung im Editor mit verständlichen Meldungen, z. B. Gateway außerhalb des Subnetzes, Netz- oder Broadcast-Adresse, ungültige Maske, doppelte DNS-Server, doppelte Profilnamen. |
@@ -88,7 +93,7 @@ Prüfsummen: `SHA256SUMS.txt` in jedem Release.
 - **Schnellzugriff** ganz oben: zugeordnete Profile als „Profil → Adapter“, ein Klick wendet an. Über
   *Schnellzugriff einrichten* ordnet man Profile direkt im Menü einem Adapter zu.
 - **Ein Untermenü je Adapter** mit Status, IP, Gateway und DNS sowie „Profil … anwenden“, „Anderes Profil anwenden“,
-  „DHCP aktivieren“, „Aktuelle Konfiguration als Profil speichern …“ und „Letzte Sicherung wiederherstellen“.
+  „DHCP aktivieren“, „Adapter deaktivieren“ / „Adapter aktivieren“, „Aktuelle Konfiguration als Profil speichern …“ und „Letzte Sicherung wiederherstellen“.
 - **Einstellungen:** alle Adapter anzeigen, Erfolgsmeldungen, Mit Windows starten, Mit Administratorrechten starten,
   Jetzt mit Administratorrechten neu starten, Darstellung (Wie Windows / Hell / Dunkel), Sprache, Datenordner.
 
@@ -100,10 +105,10 @@ umschalten lässt sich das im Tray unter *Einstellungen → Darstellung*.
   zugeordnetem Adapter, darüber Suchfeld, „+ Neu“ und „⋯“. Das **⋮-Menü** jeder Kachel (auch per Rechtsklick)
   enthält: Auf den Zieladapter anwenden, *Zuweisen an ▸* (Adapter oder „Keine Zuordnung“), Bearbeiten,
   Duplizieren, Exportieren und Löschen.
-- **Rechts, „Profil zuweisen auf:“:** Zieladapter wählen, „Aktualisieren“ und die aktuelle Adapterkonfiguration
+- **Rechts, „Profil zuweisen auf:“:** Zieladapter wählen, „Adapter deaktivieren“ / „Adapter aktivieren“, „Aktualisieren“ und die aktuelle Adapterkonfiguration
   (mit Details, „Als Profil speichern“, Sicherungen). Darunter „DHCP aktivieren“ (Bordeaux) und „Profil jetzt
   anwenden“ (Himmelblau). Bei zugeordneten Profilen wird der passende Adapter automatisch gewählt.
-- **Unten, „Adapter“:** alle Adapter als Kacheln mit Status, Adresse und Modus. Ein Klick wählt den Zieladapter;
+- **Unten, „Adapter“:** alle Adapter als Kacheln mit Status (grüner, grauer oder roter Punkt), Adresse und Modus. Ein Klick wählt den Zieladapter;
   nicht mehr passende Adapter liegen hinter „+ N weitere“.
 
 Tastenkürzel: `F5` aktualisieren, `Strg+N` neues Profil, `Strg+F` suchen, Pfeiltasten zum Wechseln zwischen

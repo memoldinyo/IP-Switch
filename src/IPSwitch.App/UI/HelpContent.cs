@@ -87,9 +87,11 @@ internal static partial class HelpContent
             new HelpHeading("Im Tray-Menü"),
             new HelpBullets(
                 "Schnellzugriff: Profile mit Adapterzuordnung stehen ganz oben („Profil → Adapter“) – ein Klick wendet an.",
-                "Pro Adapter: Untermenü mit Status, zugeordneten Profilen, „Anderes Profil anwenden“ und „DHCP aktivieren“."),
+                "Pro Adapter: Untermenü mit Status, zugeordneten Profilen, „Anderes Profil anwenden“, „DHCP aktivieren“ und „Adapter deaktivieren/aktivieren“."),
             new HelpHeading("DHCP aktivieren"),
             new HelpParagraph("Stellt IP-Adresse und DNS-Server des Zieladapters auf automatischen Bezug um. Dabei werden auch alte statische Adressen und Gateways entfernt, die Windows sonst stehen lassen würde."),
+            new HelpHeading("Adapter deaktivieren und aktivieren"),
+            new HelpParagraph("„Adapter deaktivieren“ (rechts neben „Aktualisieren“ oder im Tray-Untermenü des Adapters) schaltet den Zieladapter aus – wie in den Windows-Netzwerkverbindungen. Die IP-Konfiguration bleibt erhalten; „Adapter aktivieren“ schaltet ihn wieder ein. Der Statuspunkt zeigt: grün = verbunden, grau = getrennt, rot = deaktiviert. Auf einen deaktivierten Adapter lassen sich keine Profile anwenden."),
             new HelpHeading("Was beim Anwenden passiert"),
             new HelpBullets(
                 "Die Eingaben werden erneut geprüft, auch ob die Adresse bereits auf einem anderen Adapter eingetragen ist.",

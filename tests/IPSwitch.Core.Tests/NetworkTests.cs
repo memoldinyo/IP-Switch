@@ -334,7 +334,19 @@ public sealed class NetworkTests : IDisposable
     {
         var adapters = new AdapterService().GetAdapters(includeSecondary: true);
         Assert.All(adapters, a => Assert.True(Guid.TryParse(a.Id, out _)));
-        Assert.All(adapters, a => Assert.NotNull(a.IPv4Index));
+        Assert.All(adapters.Where(a => !a.IsDisabled), a => Assert.NotNull(a.IPv4Index));
+        Assert.All(adapters.Where(a => a.IsDisabled), a => Assert.False(a.IsConnected));
+    }
+
+    [Fact]
+    public void GetAdapters_SkipsAdaptersWithoutIpv4UnlessDisabled()
+    {
+        // Mit "nichts ist deaktiviert" dürfen nur Adapter mit IPv4 erscheinen, mit "alles deaktiviert" kommen die übrigen hinzu.
+        var none = new AdapterService(isDisabled: _ => false).GetAdapters(includeSecondary: true);
+        var all = new AdapterService(isDisabled: _ => true).GetAdapters(includeSecondary: true);
+        Assert.All(none, a => Assert.False(a.IsDisabled));
+        Assert.Equal(none.Select(a => a.Id).Order(), all.Where(a => !a.IsDisabled).Select(a => a.Id).Order());
+        Assert.All(all.Where(a => a.IsDisabled), a => Assert.Null(a.IPv4Index));
     }
 
     // ---------- Hilfsprozess-Protokoll ----------

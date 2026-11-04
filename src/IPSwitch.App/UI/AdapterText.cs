@@ -29,7 +29,7 @@ internal static class AdapterText
             : Loc.T("common.no"));
         if (a.Addresses.Count == 0)
         {
-            Line("details.ipv4", Loc.T(a.IsConnected ? "common.none" : "details.noneDisconnected"));
+            Line("details.ipv4", Loc.T(a.IsConnected ? "common.none" : a.IsDisabled ? "details.noneDisabled" : "details.noneDisconnected"));
         }
 
         foreach (var address in a.Addresses)
@@ -91,6 +91,10 @@ internal static class AdapterText
     }
 
     public static string MenuLabel(AdapterInfo a) => $"{a.Name}   {a.PrimaryAddressText} ({a.ModeText})";
+
+    /// <summary>Adaptername für Zuordnungsmenüs, mit Hinweis "(getrennt)" bzw. "(deaktiviert)".</summary>
+    public static string AssignLabel(AdapterInfo a) =>
+        a.IsConnected ? a.Name : $"{a.Name}  {Loc.T(a.IsDisabled ? "assign.disabled" : "assign.disconnected")}";
 
     public static string ProfileMode(IpProfile p) => p.UseDhcp ? Loc.T("mode.dhcp") : Loc.T("mode.static");
 

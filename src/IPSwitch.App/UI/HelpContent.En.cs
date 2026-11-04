@@ -60,9 +60,11 @@ internal static partial class HelpContent
             new HelpHeading("In the tray menu"),
             new HelpBullets(
                 "Quick access: profiles with an adapter assignment are listed at the top (“Profile → Adapter”) – one click applies them.",
-                "Per adapter: a submenu with status, assigned profiles, “Apply another profile” and “Enable DHCP”."),
+                "Per adapter: a submenu with status, assigned profiles, “Apply another profile”, “Enable DHCP” and “Disable/Enable adapter”."),
             new HelpHeading("Enable DHCP"),
             new HelpParagraph("Switches IP address and DNS servers of the target adapter to automatic. Old static addresses and gateways that Windows would otherwise keep are removed as well."),
+            new HelpHeading("Disable and enable an adapter"),
+            new HelpParagraph("“Disable adapter” (next to “Refresh” or in the adapter's tray submenu) turns the target adapter off – like in Windows Network Connections. The IP configuration is kept; “Enable adapter” turns it back on. The status dot shows: green = connected, grey = disconnected, red = disabled. Profiles cannot be applied to a disabled adapter."),
             new HelpHeading("What happens when applying"),
             new HelpBullets(
                 "The entries are checked again, including whether the address is already assigned to another adapter.",

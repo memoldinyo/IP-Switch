@@ -46,23 +46,60 @@ der MSIX darin). `tools\Test-Msix.ps1` registriert das Paket zum Ausprobieren al
    Handy-Hotspot hochladen.
 5. **Store listings** – je Sprache die Texte aus [`STORE-LISTING.md`](STORE-LISTING.md) einfügen.
    Screenshots (1920×1080) aus [`screenshots/`](screenshots/) (auch auf GitHub herunterladbar): `1-light-<Sprache>.png`, `2-dark-<Sprache>.png`,
-   `3-tray-<Sprache>.png`. Store-Logos, Trailer und Xbox-Bilder leer lassen.
-6. **Submission options › Restricted capabilities** – Begründung (auf Englisch) einfügen:
+   `3-tray-<Sprache>.png`, `4-adapter-<Sprache>.png`. Store-Logos, Trailer und Xbox-Bilder leer lassen.
+6. **Submission options › Restricted capabilities** – je Berechtigung ein eigenes Feld, höchstens 500 Zeichen.
+
+   *runFullTrust*:
 
    ```
-   IP-Switch is a classic Win32 desktop application (Windows Forms, .NET 10) packaged with the Desktop Bridge. It changes the IPv4 configuration of network adapters (static IP, subnet mask, gateway, DNS, DHCP) on the user's request.
-   runFullTrust: it runs as a full-trust desktop app with a notification-area (tray) icon, reads the network adapter configuration through the IP Helper API and the TCP/IP registry keys, and starts netsh.exe to apply settings.
-   allowElevation: changing network adapter settings with netsh requires administrator rights. When the user applies a profile, IP-Switch starts a short-lived helper process of its own executable with a UAC prompt; this process backs up the current configuration, applies the change, verifies it and exits. Nothing is changed if the user declines the UAC prompt. The app has no network code and collects no data.
+   IP-Switch is a classic Win32 desktop app (Windows Forms, .NET 10) packaged with the Desktop Bridge. It switches the IPv4 settings of network adapters (static IP, subnet mask, gateway, DNS, DHCP) on the user's request. It needs full trust to run as a desktop app with a tray icon, to read the adapter configuration through the IP Helper API and the TCP/IP registry keys, and to start netsh.exe to apply settings. It has no network code and collects no data.
    ```
 
-   **Additional Testing Information** (Hinweis für die Prüfer):
+   *allowElevation*:
 
    ```
-   No account or test data needed. IP-Switch lives in the notification area (tray icon "IP"); the manager window opens on first start. Select a network adapter at the bottom, then e.g. "Save as profile" to capture its current settings, or "New profile" to create one. "Apply profile now" changes the adapter's settings and shows a UAC prompt (administrator rights are needed by Windows for network changes); before every change the previous configuration is backed up and restored automatically on failure. Right-click the tray icon for quick access, settings and help. The app has no network code.
+   Windows requires administrator rights to change network adapter settings with netsh. When the user applies a profile, IP-Switch starts a short-lived helper process of its own executable with a UAC prompt. The helper backs up the current configuration, applies the change, verifies it and exits; on failure the backup is restored automatically. If the user declines the UAC prompt, nothing is changed. By default the app itself runs without elevation.
+   ```
+
+   **Additional Testing Information** (Hinweis für die Prüfer, ebenfalls unter 500 Zeichen):
+
+   ```
+   No account or test data needed. IP-Switch runs in the notification area (tray icon "IP"); the manager window opens on first start. Select a network adapter at the bottom and click "Save as profile" or "New profile". "Apply profile now" changes the adapter settings after a UAC prompt; the previous configuration is backed up first and restored automatically on failure. Right-click the tray icon for quick access, settings and help.
    ```
 
 7. **Submit for certification.** Die Prüfung dauert meist 1–3 Werktage, beim ersten Mal wegen der eingeschränkten
    Berechtigungen (`runFullTrust`, `allowElevation`) manchmal länger. Das Ergebnis kommt per E-Mail.
+
+## Update 1.6.0 (neue Funktionen)
+
+Version 1.5.0 wurde am 02.11.2026 als erste Version eingereicht. 1.6.0 bringt: Netzwerkadapter aus- und einschalten
+(roter Statuspunkt für deaktivierte Adapter), dunkle Meldungsfenster und dunkles Tray-Menü, Korrektur beim Neustart mit
+Administratorrechten, geringeren Speicherbedarf.
+
+1. **Abwarten oder ersetzen:** Solange eine Einreichung in der Zertifizierung ist, lässt sich keine zweite anlegen.
+   - Empfohlen: warten, bis 1.5.0 veröffentlicht ist („In the Store“), dann *Application overview › Update*.
+   - Schneller: in der laufenden Einreichung *Cancel certification*, dann bei *Packages* die 1.5.0-MSIX löschen und die
+     1.6.0-MSIX hochladen, die Texte unten eintragen und neu einreichen (die Prüfung beginnt dann von vorn).
+2. **Packages:** `IPSwitch-1.6.0-x64.msix` hochladen (Build siehe oben oder GitHub-Actions-Artefakt `IPSwitch-1.6.0-msix`).
+   Die alte 1.5.0-MSIX entfernen; die Version muss höher sein als die zuletzt veröffentlichte.
+3. **Store listings:** je Sprache nur „What's new in this version“ und die neue Zeile unter „Features“ aus
+   [`STORE-LISTING.md`](STORE-LISTING.md) übernehmen, dazu den neuen Screenshot `4-adapter-<Sprache>.png` hinzufügen
+   und die Bilder 1–3 durch die neuen Fassungen ersetzen. Alternativ *Export listings* → CSV ausfüllen → *Import listings*.
+4. **Submission options:** Die Begründungen für `runFullTrust` und `allowElevation` bleiben; bei `allowElevation`
+   ergänzen, dass der Hilfsprozess jetzt auch einen Adapter aktiviert bzw. deaktiviert (Text unten).
+5. **Additional Testing Information:** Text unten (mit Hinweis auf die neue Funktion) einsetzen und *Submit for certification*.
+
+Begründung *allowElevation* für 1.6.0 (unter 500 Zeichen):
+
+```
+Windows requires administrator rights to change network adapter settings. When the user applies a profile or turns an adapter off or on, IP-Switch starts a short-lived helper process of its own executable with a UAC prompt. It backs up the configuration, applies the change (netsh), verifies it and exits; on failure the backup is restored. If the user declines the UAC prompt, nothing is changed. By default the app itself runs without elevation.
+```
+
+Additional Testing Information für 1.6.0 (unter 500 Zeichen):
+
+```
+No account or test data needed. IP-Switch runs in the notification area (tray icon "IP"). Select an adapter at the bottom and click "Save as profile" or "New profile"; "Apply profile now" changes the settings after a UAC prompt (backup first, automatic rollback). New in 1.6.0: "Disable adapter"/"Enable adapter" next to "Refresh" turns the selected adapter off and on (UAC prompt); disabled adapters show a red dot. Dialogs and tray menu follow dark mode.
+```
 
 ## Neue Version
 

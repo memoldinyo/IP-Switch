@@ -216,7 +216,7 @@ internal sealed class AdapterTiles : Control
             adapter.IsConnected ? p.Accent : p.TextSecondary, TextFormatFlags.VerticalCenter | TextFormatFlags.Left | TextFormatFlags.NoPadding);
 
         var dot = LogicalToDeviceUnits(8);
-        using (var dotBrush = new SolidBrush(adapter.IsConnected ? p.Connected : p.Disconnected))
+        using (var dotBrush = new SolidBrush(Theme.StatusColor(adapter)))
         {
             g.FillEllipse(dotBrush, right - dot, y + ((line - dot) / 2f), dot, dot);
         }

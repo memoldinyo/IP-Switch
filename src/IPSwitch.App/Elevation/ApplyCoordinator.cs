@@ -91,6 +91,38 @@ internal sealed class ApplyCoordinator
         }
     }
 
+    /// <summary>Aktiviert bzw. deaktiviert einen Netzwerkadapter.</summary>
+    /// <returns>Ergebnis oder null, wenn der Benutzer die UAC-Abfrage abgelehnt hat.</returns>
+    public async Task<ApplyResult?> SetAdapterEnabledAsync(AdapterInfo adapter, bool enable)
+    {
+        if (IsBusy)
+        {
+            return new ApplyResult { Outcome = ApplyOutcome.InvalidRequest, Message = Loc.T("apply.busy") };
+        }
+
+        var label = Loc.T(enable ? "main.enableAdapter" : "main.disableAdapter") + $" ({adapter.Name})";
+        IsBusy = true;
+        try
+        {
+            if (ElevationInfo.IsElevated)
+            {
+                return await Task.Run(() => AdapterStateChanger.CreateDefault().SetEnabled(adapter.Id, enable)).ConfigureAwait(true);
+            }
+
+            return await RunElevatedAsync(resultFile => ElevatedProtocol.BuildAdapterStateArguments(enable, adapter.Id, Loc.Current, resultFile), label)
+                .ConfigureAwait(true);
+        }
+        catch (Exception ex)
+        {
+            Log.Error("Adapterzustand konnte nicht geändert werden", ex);
+            return Failure(Loc.T("apply.failedGeneric", ex.Message));
+        }
+        finally
+        {
+            IsBusy = false;
+        }
+    }
+
     /// <summary>Entfernt liegen gebliebene Ergebnisdateien (z. B. nach einem Absturz).</summary>
     public void CleanupRuntimeDirectory()
     {

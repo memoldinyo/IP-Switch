@@ -49,7 +49,22 @@ public sealed class BackupStore
         return result.OrderByDescending(b => b.CreatedAt).ToList();
     }
 
-    public ConfigurationBackup? Latest(string interfaceId) => List(interfaceId).FirstOrDefault();
+    /// <summary>
+    /// Neueste Sicherung eines Adapters. Liest nur so viele Dateien wie nötig: Die Dateinamen beginnen mit dem
+    /// Zeitstempel, daher reicht die Sortierung nach Namen (das Tray-Menü fragt das bei jedem Öffnen ab).
+    /// </summary>
+    public ConfigurationBackup? Latest(string interfaceId)
+    {
+        if (!System.IO.Directory.Exists(_directory))
+        {
+            return null;
+        }
+
+        return System.IO.Directory.EnumerateFiles(_directory, $"*_{SanitizeId(interfaceId)}.json")
+            .OrderByDescending(Path.GetFileName, StringComparer.Ordinal)
+            .Select(TryLoad)
+            .FirstOrDefault(b => b is not null);
+    }
 
     public static ConfigurationBackup? TryLoad(string path)
     {

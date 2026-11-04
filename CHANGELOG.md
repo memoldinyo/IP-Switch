@@ -5,6 +5,21 @@ version as release notes.
 
 ## [Unreleased]
 
+## [1.6.0] - 2026-11-04
+
+- **Disable and enable adapters:** the selected network adapter can be turned off and on again in the manager window
+  (*Disable adapter* / *Enable adapter*) and in the adapter's tray submenu – like in Windows Network Connections. Disabled
+  adapters are now listed as well; their status dot is red (green = connected, grey = disconnected). Profiles cannot be
+  applied to a disabled adapter.
+- **Dark mode for messages:** confirmations, notes and error messages use the app's own dialog in the current colour
+  scheme (light/dark) instead of the always-light Windows message box; buttons follow the UI language.
+- **Dark mode for the tray menu:** the tray menu and all its submenus follow the colour scheme as well.
+- **Fixed:** *Restart with administrator rights now* uses the scheduled task only if it starts this very program;
+  previously it could start an older installation in a different folder. If the task was deleted outside IP-Switch,
+  the setting is reset.
+- **Lighter on resources:** adapter queries shortly after one another share one result, the tray menu reads only the
+  newest backup, and memory is released after the manager window is closed.
+
 ## [1.5.0] - 2026-11-02
 
 - **Microsoft Store package:** `build-msix.ps1` builds an MSIX package for the Microsoft Store (signed by Microsoft,
@@ -32,6 +47,7 @@ First public release.
 - Import and export of profiles (JSON), sample profiles.
 - Per-user MSI installer and portable ZIP packages.
 
-[Unreleased]: https://github.com/memoldinyo/IP-Switch/compare/v1.5.0...HEAD
+[Unreleased]: https://github.com/memoldinyo/IP-Switch/compare/v1.6.0...HEAD
+[1.6.0]: https://github.com/memoldinyo/IP-Switch/compare/v1.5.0...v1.6.0
 [1.5.0]: https://github.com/memoldinyo/IP-Switch/compare/v1.4.0...v1.5.0
 [1.4.0]: https://github.com/memoldinyo/IP-Switch/releases/tag/v1.4.0

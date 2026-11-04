@@ -15,6 +15,9 @@ namespace IPSwitch.App;
 /// </summary>
 internal sealed class AppController
 {
+    private const long AdapterCacheMilliseconds = 1000;
+    private (IReadOnlyList<AdapterInfo> Adapters, bool ShowAll, long Ticks)? _adapterCache;
+
     public AppController(AppPaths paths)
     {
         Paths = paths;
@@ -68,9 +71,28 @@ internal sealed class AppController
     /// <summary>Wird vom Tray-Kontext gesetzt, um Benachrichtigungen anzuzeigen.</summary>
     public Action<string, ToolTipIcon>? Notify { get; set; }
 
-    public IReadOnlyList<AdapterInfo> GetAdapters() => Adapters.GetAdapters(Settings.ShowAllAdapters);
+    /// <summary>
+    /// Adapterliste. Mehrere Abfragen kurz hintereinander (Tooltip, Fenster und Menü nach einer Netzwerkänderung)
+    /// teilen sich eine Ermittlung – jede liest sonst alle Adapter samt Registry neu ein.
+    /// </summary>
+    public IReadOnlyList<AdapterInfo> GetAdapters()
+    {
+        var showAll = Settings.ShowAllAdapters;
+        if (_adapterCache is { } cache && cache.ShowAll == showAll && Environment.TickCount64 - cache.Ticks < AdapterCacheMilliseconds)
+        {
+            return cache.Adapters;
+        }
 
-    public void RaiseAdaptersChanged() => AdaptersChanged?.Invoke(this, EventArgs.Empty);
+        var adapters = Adapters.GetAdapters(showAll);
+        _adapterCache = (adapters, showAll, Environment.TickCount64);
+        return adapters;
+    }
+
+    public void RaiseAdaptersChanged()
+    {
+        _adapterCache = null;
+        AdaptersChanged?.Invoke(this, EventArgs.Empty);
+    }
 
     public void SaveSettings() => Settings.Save(Paths.SettingsFile);
 
@@ -118,6 +140,50 @@ internal sealed class AppController
     public Task<bool> RestoreBackupAsync(ConfigurationBackup backup, AdapterInfo adapter, IWin32Window? owner) =>
         ApplyAsync(adapter, backup.Configuration, Loc.T("label.restoreBackup", backup.CreatedAt.LocalDateTime.ToString("g")), owner);
 
+    /// <summary>Schaltet einen Adapter ein bzw. aus; vor dem Deaktivieren wird nachgefragt.</summary>
+    public Task<bool> ToggleAdapterAsync(AdapterInfo adapter, IWin32Window? owner) =>
+        !adapter.IsDisabled && !Dialogs.Confirm(owner, Loc.T("confirm.disableAdapter", adapter.Name), MessageBoxIcon.Warning)
+            ? Task.FromResult(false)
+            : SetAdapterEnabledAsync(adapter, enable: adapter.IsDisabled, owner);
+
+    /// <summary>Aktiviert bzw. deaktiviert einen Netzwerkadapter (UAC-Abfrage, falls nötig).</summary>
+    public async Task<bool> SetAdapterEnabledAsync(AdapterInfo adapter, bool enable, IWin32Window? owner)
+    {
+        ApplyResult? result;
+        var pending = Coordinator.SetAdapterEnabledAsync(adapter, enable); // setzt IsBusy synchron
+        BusyChanged?.Invoke(this, EventArgs.Empty);
+        try
+        {
+            result = await pending;
+        }
+        finally
+        {
+            BusyChanged?.Invoke(this, EventArgs.Empty);
+        }
+
+        owner = Dialogs.Alive(owner);
+        if (result is null)
+        {
+            Notify?.Invoke(Loc.T("apply.cancelled"), ToolTipIcon.Info);
+            return false;
+        }
+
+        RaiseAdaptersChanged();
+        if (result.Success)
+        {
+            if (Settings.ShowNotifications)
+            {
+                Notify?.Invoke(result.Message, ToolTipIcon.Info);
+            }
+
+            return true;
+        }
+
+        Log.Warn($"Adapterzustand {adapter.Name}: {result.Outcome} – {result.Message}");
+        Dialogs.ShowApplyResult(owner, result, Paths.LogDirectory);
+        return false;
+    }
+
     /// <summary>
     /// Öffnet den Profileditor. Bei "Speichern und anwenden" wird das Profil anschließend direkt angewendet.
     /// </summary>
@@ -158,6 +224,12 @@ internal sealed class AppController
 
     private async Task<bool> ApplyAsync(AdapterInfo adapter, AdapterConfiguration target, string label, IWin32Window? owner)
     {
+        if (adapter.IsDisabled)
+        {
+            Dialogs.Warning(owner, Loc.T("apply.adapterDisabled", adapter.Name));
+            return false;
+        }
+
         var errors = ConfigurationValidator.Validate(target);
         if (errors.Count > 0)
         {

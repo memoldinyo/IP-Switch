@@ -37,10 +37,12 @@ internal static class Dialogs
     public static DialogResult Ask(IWin32Window? owner, string message, MessageBoxButtons buttons) =>
         WithOwner(owner, o => Show(o, message, buttons, MessageBoxIcon.Question));
 
-    /// <summary>Meldungsfenster; bei Arabisch von rechts nach links.</summary>
-    private static DialogResult Show(IWin32Window owner, string message, MessageBoxButtons buttons, MessageBoxIcon icon) =>
-        MessageBox.Show(owner, message, Title, buttons, icon, MessageBoxDefaultButton.Button1,
-            Loc.IsRightToLeft ? MessageBoxOptions.RtlReading | MessageBoxOptions.RightAlign : 0);
+    /// <summary>Meldungsfenster im Farbschema der Anwendung; bei Arabisch von rechts nach links.</summary>
+    private static DialogResult Show(IWin32Window owner, string message, MessageBoxButtons buttons, MessageBoxIcon icon)
+    {
+        using var dialog = new MessageDialog(message, buttons, icon) { StartPosition = FormStartPosition.CenterParent };
+        return dialog.ShowDialog(owner);
+    }
 
     /// <summary>Zeigt einen modalen Dialog; ohne Besitzer zentriert und in den Vordergrund geholt.</summary>
     public static DialogResult ShowModal(Form form, IWin32Window? owner)

@@ -73,9 +73,9 @@ Schnellzugriff einrichten            ▸   Profil ▸ Adapter zuordnen
 ● Ethernet 10.0.0.5/24 (Statisch)    ▸     Profil „…“ anwenden
 Weitere Adapter (7)                  ▸     Anderes Profil anwenden ▸
 ──────────────────────────────             DHCP aktivieren (IP und DNS)
-Verwaltung öffnen …                        Aktuelle Konfiguration als Profil speichern …
-Neues Profil …                             Letzte Sicherung wiederherstellen
-──────────────────────────────
+Verwaltung öffnen …                        Adapter deaktivieren
+Neues Profil …                             Aktuelle Konfiguration als Profil speichern …
+──────────────────────────────             Letzte Sicherung wiederherstellen
 Einstellungen                        ▸
 Hilfe
 Über IP-Switch
@@ -95,8 +95,8 @@ Beenden
 | **Kopfkarte (oben links)** | Titel, **Neues Profil**, Bearbeiten, Duplizieren, Löschen, Zahnrad (Import, Export, Datenordner, Hilfe, Über) und **?** (Hilfe). |
 | **Profilzeile** | Anzahl der Profile, Suchfeld, **+ Neu** und **⋯** (Import, Export, Datenordner). |
 | **Profilkacheln (links)** | Jede Kachel zeigt IP/Präfix, Gateway, Modus, DNS und – falls vorhanden – den zugeordneten Adapter. Rechts unten öffnet **⋮** das Profilmenü. |
-| **Profil zuweisen auf: (rechts)** | Zieladapter, **Aktualisieren**, aktuelle Adapterkonfiguration (mit **Details**, **Als Profil speichern**, **Sicherungen**), **DHCP aktivieren** und **Profil jetzt anwenden**. |
-| **Adapter (unten)** | Alle Adapter als Kacheln mit Status, Adresse und Modus. Ein Klick wählt den Zieladapter. Weitere Adapter stehen hinter **+ N weitere**. |
+| **Profil zuweisen auf: (rechts)** | Zieladapter, **Adapter deaktivieren/aktivieren**, **Aktualisieren**, aktuelle Adapterkonfiguration (mit **Details**, **Als Profil speichern**, **Sicherungen**), **DHCP aktivieren** und **Profil jetzt anwenden**. |
+| **Adapter (unten)** | Alle Adapter als Kacheln mit Status (Punkt: grün = verbunden, grau = getrennt, rot = deaktiviert), Adresse und Modus. Ein Klick wählt den Zieladapter. Weitere Adapter stehen hinter **+ N weitere**. |
 
 Das **⋮-Menü** einer Profilkachel (auch per Rechtsklick oder Kontextmenütaste) enthält:
 
@@ -146,6 +146,11 @@ nach. Die Statuszeile darunter zeigt vorab, welches Profil auf welchen Adapter a
 
 **DHCP aktivieren** stellt IP-Adresse und DNS-Server des Zieladapters auf automatischen Bezug um. Dabei entfernt
 IP-Switch auch alte statische Adressen und Gateways, die Windows sonst aktiv lassen würde.
+
+**Adapter deaktivieren** (rechts neben **Aktualisieren** oder im Tray-Untermenü des Adapters) schaltet den Zieladapter
+aus – wie *Deaktivieren* in den Windows-Netzwerkverbindungen; vorher fragt IP-Switch nach. Die IP-Konfiguration bleibt
+erhalten, der Statuspunkt wird rot. **Adapter aktivieren** schaltet ihn wieder ein. Wie jede Änderung erfordert das
+Administratorrechte (UAC-Abfrage). Auf einen deaktivierten Adapter lassen sich keine Profile anwenden.
 
 **Ablauf einer Änderung:**
 

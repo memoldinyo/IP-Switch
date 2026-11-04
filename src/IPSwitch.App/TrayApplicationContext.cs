@@ -77,6 +77,14 @@ internal sealed class TrayApplicationContext : ApplicationContext
             Autostart.RefreshPathIfEnabled();
         }
 
+        if (_controller.Settings.AdminAutostart && !AppPackage.IsPackaged && !AdminAutostartTaskExists())
+        {
+            // Aufgabe wurde außerhalb von IP-Switch gelöscht (z. B. in der Aufgabenplanung): Einstellung angleichen.
+            Log.Info("Geplante Aufgabe für den Start mit Administratorrechten fehlt – Einstellung wird zurückgesetzt.");
+            _controller.Settings.AdminAutostart = false;
+            _controller.SaveSettings();
+        }
+
         if (_controller.Settings.AdminAutostart && SafeAutostartState())
         {
             // Z. B. nach einem MSI-Update wieder eingetragener normaler Autostart: würde mit der Aufgabe konkurrieren.
@@ -177,6 +185,7 @@ internal sealed class TrayApplicationContext : ApplicationContext
             {
                 _mainForm?.Dispose();
                 _mainForm = null;
+                MemoryTrim.Schedule();
             };
             _mainForm.Show();
         }
@@ -244,7 +253,7 @@ internal sealed class TrayApplicationContext : ApplicationContext
             var item = new ToolStripMenuItem($"{profile.Name}  →  {adapter!.Name}")
             {
                 ToolTipText = AdapterText.ProfileSummary(profile) + (profile.Description is { } d ? "\n" + d : string.Empty),
-                Enabled = !busy,
+                Enabled = !busy && !adapter.IsDisabled,
             };
             item.Click += async (_, _) => await _controller.ApplyProfileAsync(profile, adapter, Owner);
             _menu.Items.Add(item);
@@ -385,6 +394,9 @@ internal sealed class TrayApplicationContext : ApplicationContext
         var exit = new ToolStripMenuItem(Loc.T("tray.exit"));
         exit.Click += (_, _) => ExitThread();
         _menu.Items.AddRange([settings, help, about, new ToolStripSeparator(), exit]);
+
+        // Bei jedem Öffnen neu, damit ein geändertes Farbschema sofort gilt.
+        UI.Modern.ModernMenuRenderer.ApplyTo(_menu);
         _menu.ResumeLayout();
     }
 
@@ -392,10 +404,13 @@ internal sealed class TrayApplicationContext : ApplicationContext
     {
         var menu = new ToolStripMenuItem(AdapterText.MenuLabel(adapter))
         {
-            Image = adapter.IsConnected ? AppIcons.Connected : AppIcons.Disconnected,
+            Image = AppIcons.ForAdapter(adapter),
             ToolTipText = adapter.Description,
         };
         var items = menu.DropDownItems;
+
+        // Ein deaktivierter Adapter lässt sich nur wieder einschalten; Profile, DHCP und Wiederherstellen sind gesperrt.
+        var blocked = busy || adapter.IsDisabled;
 
         ToolStripMenuItem Info(string text) => new(text) { Enabled = false };
         items.Add(Info(string.Join(" · ", new[] { adapter.StatusText, adapter.TypeText, adapter.SpeedText }.Where(s => s.Length > 0))));
@@ -420,21 +435,29 @@ internal sealed class TrayApplicationContext : ApplicationContext
         var assigned = profiles.Where(p => AdapterService.Match(adapters, p.Adapter)?.Id == adapter.Id).ToList();
         foreach (var profile in assigned)
         {
-            items.Add(ProfileItem(Loc.T("tray.applyProfile", profile.Name), profile, adapter, busy));
+            items.Add(ProfileItem(Loc.T("tray.applyProfile", profile.Name), profile, adapter, blocked));
         }
 
         var others = profiles.Except(assigned).ToList();
-        var otherMenu = new ToolStripMenuItem(Loc.T(assigned.Count > 0 ? "tray.applyOther" : "tray.applyAny")) { Enabled = !busy && others.Count > 0 };
+        var otherMenu = new ToolStripMenuItem(Loc.T(assigned.Count > 0 ? "tray.applyOther" : "tray.applyAny")) { Enabled = !blocked && others.Count > 0 };
         foreach (var profile in others)
         {
-            otherMenu.DropDownItems.Add(ProfileItem(profile.Name, profile, adapter, busy, confirmForeign: true));
+            otherMenu.DropDownItems.Add(ProfileItem(profile.Name, profile, adapter, blocked, confirmForeign: true));
         }
 
         items.Add(otherMenu);
 
-        var dhcp = new ToolStripMenuItem(Loc.T("tray.enableDhcp")) { Enabled = !busy };
+        var dhcp = new ToolStripMenuItem(Loc.T("tray.enableDhcp")) { Enabled = !blocked };
         dhcp.Click += async (_, _) => await _controller.EnableDhcpAsync(adapter, Owner);
         items.Add(dhcp);
+
+        var toggle = new ToolStripMenuItem(Loc.T(adapter.IsDisabled ? "main.enableAdapter" : "main.disableAdapter"))
+        {
+            Enabled = !busy,
+            ToolTipText = Loc.T("main.tipAdapterState"),
+        };
+        toggle.Click += async (_, _) => await _controller.ToggleAdapterAsync(adapter, Owner);
+        items.Add(toggle);
 
         items.Add(new ToolStripSeparator());
         var capture = new ToolStripMenuItem(Loc.T("tray.capture"));
@@ -444,7 +467,7 @@ internal sealed class TrayApplicationContext : ApplicationContext
         var latest = SafeLatestBackup(adapter);
         var restore = new ToolStripMenuItem(Loc.T("tray.restoreLatest"))
         {
-            Enabled = !busy && latest is not null,
+            Enabled = !blocked && latest is not null,
             ToolTipText = latest is null
                 ? Loc.T("tray.noBackup")
                 : $"{latest.CreatedAt.LocalDateTime:g} – {latest.Reason}\n{latest.Configuration.Summary}",
@@ -527,7 +550,7 @@ internal sealed class TrayApplicationContext : ApplicationContext
 
             foreach (var adapter in adapters)
             {
-                var adapterItem = new ToolStripMenuItem(adapter.Name + (adapter.IsConnected ? string.Empty : "  " + Loc.T("assign.disconnected")))
+                var adapterItem = new ToolStripMenuItem(AdapterText.AssignLabel(adapter))
                 {
                     Checked = bound?.Id == adapter.Id,
                     ToolTipText = $"{adapter.Description}\n{adapter.PrimaryAddressText} ({adapter.ModeText})",
@@ -643,12 +666,13 @@ internal sealed class TrayApplicationContext : ApplicationContext
     /// </summary>
     private void RestartElevated()
     {
-        var started = _controller.Settings.AdminAutostart && new AdminAutostartTask().TryStart(ElevationInfo.CurrentUserSid);
+        var exe = Environment.ProcessPath ?? Application.ExecutablePath;
+        var started = _controller.Settings.AdminAutostart && new AdminAutostartTask().TryStart(ElevationInfo.CurrentUserSid, exe);
         if (!started)
         {
             try
             {
-                Process.Start(new ProcessStartInfo(Environment.ProcessPath ?? Application.ExecutablePath, Program.AutostartSwitch)
+                Process.Start(new ProcessStartInfo(exe, Program.AutostartSwitch)
                 {
                     UseShellExecute = true,
                     Verb = "runas",
@@ -680,6 +704,20 @@ internal sealed class TrayApplicationContext : ApplicationContext
         {
             Log.Warn("Sicherungen nicht lesbar: " + ex.Message);
             return null;
+        }
+    }
+
+    private static bool AdminAutostartTaskExists()
+    {
+        try
+        {
+            return new AdminAutostartTask().Exists(ElevationInfo.CurrentUserSid);
+        }
+        catch (Exception ex)
+        {
+            // Im Zweifel nichts zurücksetzen.
+            Log.Warn("Geplante Aufgabe konnte nicht geprüft werden: " + ex.Message);
+            return true;
         }
     }
 

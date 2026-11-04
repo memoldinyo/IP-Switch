@@ -5,7 +5,7 @@ namespace IPSwitch.App.UI;
 internal sealed class DetailsDialog : Form
 {
     private readonly TextBox _details;
-    private readonly Button _toggle;
+    private readonly Modern.ModernButton _toggle;
 
     public DetailsDialog(string message, string details, MessageBoxIcon icon, bool expanded = false)
     {
@@ -22,17 +22,14 @@ internal sealed class DetailsDialog : Form
         AutoSizeMode = AutoSizeMode.GrowAndShrink;
         Padding = new Padding(12);
 
-        var picture = new PictureBox
+        var p = Modern.Theme.Current;
+        var (glyph, color) = icon switch
         {
-            Image = (icon switch
-            {
-                MessageBoxIcon.Error => SystemIcons.Error,
-                MessageBoxIcon.Warning => SystemIcons.Warning,
-                _ => SystemIcons.Information,
-            }).ToBitmap(),
-            SizeMode = PictureBoxSizeMode.AutoSize,
-            Margin = new Padding(0, 0, 12, 0),
+            MessageBoxIcon.Error => (Modern.Glyphs.Error, p.Danger),
+            MessageBoxIcon.Warning => (Modern.Glyphs.Warning, p.Warning),
+            _ => (Modern.Glyphs.Info, p.Accent),
         };
+        var picture = new Modern.GlyphLabel(glyph, 22f, color) { Margin = new Padding(0, 0, 12, 0) };
 
         var text = new Label
         {
@@ -55,17 +52,17 @@ internal sealed class DetailsDialog : Form
             Margin = new Padding(0, 0, 0, 8),
         };
 
-        _toggle = new Button { Text = Loc.T("details.show"), AutoSize = true };
+        _toggle = new Modern.ModernButton { Text = Loc.T("details.show"), Margin = new Padding(8, 0, 0, 0) };
         _toggle.Click += (_, _) =>
         {
             _details.Visible = !_details.Visible;
             _toggle.Text = Loc.T(_details.Visible ? "details.hide" : "details.show");
         };
 
-        var copy = new Button { Text = Loc.T("details.copy"), AutoSize = true };
+        var copy = new Modern.ModernButton { Text = Loc.T("details.copy"), Margin = new Padding(8, 0, 0, 0) };
         copy.Click += (_, _) => Clipboard.SetText(message + Environment.NewLine + Environment.NewLine + details);
 
-        var ok = new Button { Text = "OK", AutoSize = true, DialogResult = DialogResult.OK, MinimumSize = new Size(88, 0) };
+        var ok = new Modern.ModernButton { Text = "OK", Kind = Modern.ButtonKind.Primary, DialogResult = DialogResult.OK, MinimumWidth = 96, Margin = new Padding(8, 0, 0, 0) };
         AcceptButton = ok;
         CancelButton = ok;
 

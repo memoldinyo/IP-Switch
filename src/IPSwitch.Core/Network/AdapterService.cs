@@ -23,9 +23,14 @@ public sealed class AdapterService : IAdapterLocator
     ];
 
     private readonly IConfigurationReader _configurationReader;
+    private readonly Func<string, bool> _isDisabled;
 
-    public AdapterService(IConfigurationReader? configurationReader = null) =>
+    /// <param name="isDisabled">Prüft, ob ein Adapter deaktiviert ist (Standard: <see cref="AdapterDevice.IsDisabled"/>).</param>
+    public AdapterService(IConfigurationReader? configurationReader = null, Func<string, bool>? isDisabled = null)
+    {
         _configurationReader = configurationReader ?? new TcpipRegistryReader();
+        _isDisabled = isDisabled ?? AdapterDevice.IsDisabled;
+    }
 
     /// <param name="includeSecondary">true = auch virtuelle Hilfsadapter (Wi-Fi Direct, WAN Miniport usw.) liefern.</param>
     public IReadOnlyList<AdapterInfo> GetAdapters(bool includeSecondary = false)
@@ -60,6 +65,7 @@ public sealed class AdapterService : IAdapterLocator
 
         return result
             .OrderByDescending(a => a.IsConnected)
+            .ThenBy(a => a.IsDisabled)
             .ThenBy(a => a.Name, StringComparer.CurrentCultureIgnoreCase)
             .ToList();
     }
@@ -116,9 +122,10 @@ public sealed class AdapterService : IAdapterLocator
             return null;
         }
 
+        // Deaktivierte Adapter haben kein IPv4 gebunden – sie werden trotzdem angezeigt, damit sie sich wieder einschalten lassen.
         if (!nic.Supports(NetworkInterfaceComponent.IPv4))
         {
-            return null;
+            return CreateDisabledInfo(nic);
         }
 
         var properties = nic.GetIPProperties();
@@ -129,12 +136,12 @@ public sealed class AdapterService : IAdapterLocator
         }
         catch (NetworkInformationException)
         {
-            return null;
+            return CreateDisabledInfo(nic);
         }
 
         if (ipv4 is null)
         {
-            return null;
+            return CreateDisabledInfo(nic);
         }
 
         var addresses = properties.UnicastAddresses
@@ -180,6 +187,29 @@ public sealed class AdapterService : IAdapterLocator
                 .Where(d => d.AddressFamily == AddressFamily.InterNetwork)
                 .Select(d => d.ToString()).ToList(),
             PersistentConfiguration = _configurationReader.ReadConfiguration(nic.Id),
+        };
+    }
+
+    /// <summary>Adapter ohne IPv4: nur aufnehmen, wenn er deaktiviert ist (sonst z. B. ein reiner IPv6- oder Filteradapter).</summary>
+    private AdapterInfo? CreateDisabledInfo(NetworkInterface nic)
+    {
+        if (!_isDisabled(nic.Id))
+        {
+            return null;
+        }
+
+        var persistent = _configurationReader.ReadConfiguration(nic.Id);
+        return new AdapterInfo
+        {
+            Id = nic.Id,
+            Name = nic.Name,
+            Description = nic.Description,
+            MacAddress = FormatMac(nic.GetPhysicalAddress()),
+            InterfaceType = nic.NetworkInterfaceType,
+            Status = OperationalStatus.Down,
+            IsDisabled = true,
+            DhcpEnabled = persistent?.DhcpEnabled ?? true,
+            PersistentConfiguration = persistent,
         };
     }
 }

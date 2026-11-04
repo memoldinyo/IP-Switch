@@ -35,6 +35,7 @@ internal sealed class MainForm : Form
     private readonly ModernButton _capture;
     private readonly ModernButton _backups;
     private readonly ModernButton _details;
+    private readonly ModernButton _adapterState;
     private readonly Label _status;
     private readonly Label _rights;
     private readonly ContextMenuStrip _settingsMenu;
@@ -183,10 +184,14 @@ internal sealed class MainForm : Form
         applyTitle.Controls.Add(new Label { Text = Loc.T("main.applyTitle"), AutoSize = true, Font = new Font("Segoe UI Semibold", 13f), Margin = new Padding(0, 4, 0, 0) });
 
         var refresh = new ModernButton { Text = Loc.T("main.refresh"), Glyph = Glyphs.Refresh, Margin = Padding.Empty };
-        refresh.Click += (_, _) => RefreshAdapters();
+        refresh.Click += (_, _) => _controller.RaiseAdaptersChanged(); // neu einlesen (nicht aus dem Zwischenspeicher)
         _tips.SetToolTip(refresh, Loc.T("main.tipRefresh"));
+        _adapterState = new ModernButton { Glyph = Glyphs.Power, Text = Loc.T("main.disableAdapter"), Margin = new Padding(0, 0, 8, 0) };
+        _adapterState.Click += async (_, _) => await ToggleAdapterAsync();
+        _tips.SetToolTip(_adapterState, Loc.T("main.tipAdapterState"));
         var refreshRow = new FlowLayoutPanel { FlowDirection = FlowDirection.RightToLeft, AutoSize = true, Dock = DockStyle.Fill, Margin = new Padding(0, 8, 0, 16), WrapContents = false };
         refreshRow.Controls.Add(refresh);
+        refreshRow.Controls.Add(_adapterState);
 
         _residual = new Label { AutoSize = true, ForeColor = _p.Warning, Visible = false, Margin = new Padding(0, 8, 0, 0), MaximumSize = new Size(360, 0) };
         _details = SmallButton(Glyphs.Info, Loc.T("main.details"), (_, _) => ShowDetails());
@@ -315,7 +320,7 @@ internal sealed class MainForm : Form
         switch (e.KeyCode)
         {
             case Keys.F5:
-                RefreshAdapters();
+                _controller.RaiseAdaptersChanged();
                 e.Handled = true;
                 break;
             case Keys.N when e.Control:
@@ -508,7 +513,7 @@ internal sealed class MainForm : Form
         assign.DropDownItems.Add(new ToolStripSeparator());
         foreach (var adapter in _adapterCache)
         {
-            var item = new ToolStripMenuItem(adapter.Name + (adapter.IsConnected ? string.Empty : "  " + Loc.T("assign.disconnected")))
+            var item = new ToolStripMenuItem(AdapterText.AssignLabel(adapter))
             {
                 Checked = bound?.Id == adapter.Id,
                 ToolTipText = $"{adapter.Description}\n{adapter.PrimaryAddressText} ({adapter.ModeText})",
@@ -652,19 +657,26 @@ internal sealed class MainForm : Form
         var profile = _profiles.SelectedProfile;
         var adapter = _picker.SelectedAdapter;
 
+        var usable = adapter is { IsDisabled: false };
+
         _edit.Enabled = _duplicate.Enabled = _delete.Enabled = profile is not null;
-        _apply.Enabled = !busy && profile is not null && adapter is not null;
-        _dhcp.Enabled = !busy && adapter is not null;
+        _apply.Enabled = !busy && profile is not null && usable;
+        _dhcp.Enabled = !busy && usable;
         _capture.Enabled = _backups.Enabled = _details.Enabled = adapter is not null;
         _apply.Text = Loc.T(busy ? "main.applying" : "main.apply");
+        _adapterState.Enabled = !busy && adapter is not null;
+        _adapterState.Text = Loc.T(adapter is { IsDisabled: true } ? "main.enableAdapter" : "main.disableAdapter");
+        _adapterState.Kind = adapter is { IsDisabled: true } ? ButtonKind.Success : ButtonKind.Secondary;
 
         _status.Text = busy
             ? Loc.T("status.busy")
-            : profile is null
-                ? Loc.T("main.statusSelectProfile")
-                : adapter is null
-                    ? Loc.T("main.statusSelectAdapter")
-                    : Loc.T("main.statusReady", profile.Name, adapter.Name);
+            : adapter is { IsDisabled: true }
+                ? Loc.T("main.statusAdapterDisabled", adapter.Name)
+                : profile is null
+                    ? Loc.T("main.statusSelectProfile")
+                    : adapter is null
+                        ? Loc.T("main.statusSelectAdapter")
+                        : Loc.T("main.statusReady", profile.Name, adapter.Name);
     }
 
     // ---------- Adapteraktionen ----------
@@ -679,6 +691,14 @@ internal sealed class MainForm : Form
         if (Dialogs.Confirm(this, Loc.T("confirm.dhcp", adapter.Name)))
         {
             await _controller.EnableDhcpAsync(adapter, this);
+        }
+    }
+
+    private async Task ToggleAdapterAsync()
+    {
+        if (_picker.SelectedAdapter is { } adapter)
+        {
+            await _controller.ToggleAdapterAsync(adapter, this);
         }
     }
 

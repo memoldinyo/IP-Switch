@@ -15,7 +15,7 @@ internal static class Program
     private static int Main(string[] args)
     {
         // Erhöhter Hilfsprozess: führt einen Auftrag aus und beendet sich wieder (keine Tray-Oberfläche).
-        if (args.Length > 0 && args[0] is ElevatedProtocol.ApplySwitch or ElevatedProtocol.AdminAutostartSwitch)
+        if (args.Length > 0 && ElevatedProtocol.IsHelperSwitch(args[0]))
         {
             ApplicationConfiguration.Initialize();
             return ElevatedHelper.Run(args);

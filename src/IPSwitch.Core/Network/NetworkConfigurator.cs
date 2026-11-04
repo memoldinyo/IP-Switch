@@ -64,6 +64,11 @@ public sealed class NetworkConfigurator
             return ApplyResult.Invalid(Loc.T("apply.adapterNotFound"));
         }
 
+        if (adapter.IsDisabled)
+        {
+            return ApplyResult.Invalid(Loc.T("apply.adapterDisabled", adapter.Name));
+        }
+
         if (adapter.IPv4Index is not { } index)
         {
             return ApplyResult.Invalid(Loc.T("apply.noIpv4", adapter.Name));

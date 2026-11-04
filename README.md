@@ -27,6 +27,10 @@ profiles and applies them with one click: static address, DHCP, gateway and DNS.
 
 ![Tray context menu with adapter submenu](docs/screenshots/tray-menu.png)
 
+**Disabling an adapter** – red status dot for disabled adapters, confirmation in the app's own (dark) dialog:
+
+![Confirmation before disabling a network adapter](docs/screenshots/disable-adapter.png)
+
 <sub>Shown with sample profiles and adapters.</sub>
 
 ## Download
@@ -58,10 +62,11 @@ Checksums: `SHA256SUMS.txt` in every release.
 
 | Area | Function |
 |---|---|
-| Adapters | Detects all network adapters with IPv4. Shows status, type, speed, MAC, identifier (GUID), active **and** saved IPv4 configuration (address/prefix, gateway, DNS, DHCP server). |
+| Adapters | Detects all network adapters with IPv4, including disabled ones. Status dot: green = connected, grey = disconnected, red = disabled. Shows status, type, speed, MAC, identifier (GUID), active **and** saved IPv4 configuration (address/prefix, gateway, DNS, DHCP server). |
 | Profiles | Create, edit, duplicate, delete, import, export (JSON). |
 | Assignment | Profiles can be assigned to an adapter – in the profile editor, via the ⋮ menu of a profile tile or directly in the tray menu under *Set up quick access*. Assigned profiles appear in the tray menu as quick access. |
 | Apply | From the tray menu (one click) or from the manager window. Plus “Enable DHCP” for IP and DNS. |
+| Adapter on/off | “Disable adapter” / “Enable adapter” in the manager window and in the tray submenu – like in Windows Network Connections; the IP configuration is kept. |
 | Capture | “Save current configuration as profile” takes over the values of an adapter into a new profile. New values can be entered directly and set immediately with “Save and apply”. |
 | Safety | Backup before every change, verification afterwards, automatic rollback on errors. “Restore latest backup” and a list of all backups per adapter. |
 | Validation | Live checks in the editor with clear messages, e.g. gateway outside the subnet, network or broadcast address, invalid mask, duplicate DNS servers, duplicate profile names, address already used by another adapter. |
@@ -88,7 +93,7 @@ Checksums: `SHA256SUMS.txt` in every release.
 - **Quick access** at the top: assigned profiles as “Profile → Adapter”, one click applies. *Set up quick access* assigns
   profiles to adapters directly from the menu.
 - **One submenu per adapter** with status, IP, gateway and DNS, plus “Apply profile …”, “Apply another profile”,
-  “Enable DHCP”, “Save current configuration as profile …” and “Restore latest backup”.
+  “Enable DHCP”, “Disable adapter” / “Enable adapter”, “Save current configuration as profile …” and “Restore latest backup”.
 - **Settings:** show all adapters, success notifications, start with Windows, start with administrator rights,
   restart with administrator rights now, appearance (same as Windows / light / dark), language, data folder.
 
@@ -99,10 +104,10 @@ Checksums: `SHA256SUMS.txt` in every release.
 - **Profiles:** tiles (two columns when the window is wide enough) with IP/prefix, gateway, mode, DNS and the assigned
   adapter, plus a search box, “+ New” and “⋯”. The **⋮ menu** of each tile (also via right-click) contains: apply to
   the target adapter, *Assign to ▸* (adapter or “No assignment”), Edit, Duplicate, Export and Delete.
-- **Right, “Assign profile to:”:** choose the target adapter, “Refresh” and the current adapter configuration (with
+- **Right, “Assign profile to:”:** choose the target adapter, “Disable adapter” / “Enable adapter”, “Refresh” and the current adapter configuration (with
   details, “Save as profile”, backups). Below: “Enable DHCP” (bordeaux) and “Apply profile now” (sky blue). For
   assigned profiles the matching adapter is selected automatically.
-- **Bottom, “Adapters”:** all adapters as tiles with status, address and mode. A click selects the target adapter;
+- **Bottom, “Adapters”:** all adapters as tiles with status (green/grey/red dot), address and mode. A click selects the target adapter;
   adapters that no longer fit are behind “+ N more”.
 
 Shortcuts: `F1` help, `F5` refresh, `Ctrl+N` new profile, `Ctrl+F` search, arrow keys to move between tiles,

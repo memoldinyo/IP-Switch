@@ -9,6 +9,7 @@ internal static class AppIcons
     private static readonly Lazy<Icon> LazyWindow = new(() => LoadIcon(new Size(32, 32)));
     private static readonly Lazy<Image> LazyConnected = new(() => Dot(Color.FromArgb(46, 160, 67)));
     private static readonly Lazy<Image> LazyDisconnected = new(() => Dot(Color.FromArgb(150, 150, 150)));
+    private static readonly Lazy<Image> LazyDisabled = new(() => Dot(Color.FromArgb(214, 54, 54)));
 
     public static Icon Tray => LazyTray.Value;
 
@@ -17,6 +18,12 @@ internal static class AppIcons
     public static Image Connected => LazyConnected.Value;
 
     public static Image Disconnected => LazyDisconnected.Value;
+
+    public static Image Disabled => LazyDisabled.Value;
+
+    /// <summary>Statuspunkt für Menüs: grün = verbunden, rot = deaktiviert, grau = getrennt.</summary>
+    public static Image ForAdapter(IPSwitch.Core.Models.AdapterInfo adapter) =>
+        adapter.IsConnected ? Connected : adapter.IsDisabled ? Disabled : Disconnected;
 
     private static Icon LoadIcon(Size size)
     {
