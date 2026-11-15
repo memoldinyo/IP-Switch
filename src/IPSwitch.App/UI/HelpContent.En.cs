@@ -28,7 +28,7 @@ internal static partial class HelpContent
         new("start", "Getting started", Modern.Glyphs.Play,
         [
             new HelpBullets(
-                "1. Click the tray icon → “Open manager …”.",
+                "1. Double-click the tray icon, or click it → “Open manager …”.",
                 "2. At the bottom, select the adapter you want to configure.",
                 "3. On the right, choose “Save as profile” to keep the current state as a profile, e.g. “Original state”.",
                 "4. “New profile” → enter name, IP address, subnet mask etc. → Save.",

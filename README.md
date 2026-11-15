@@ -23,7 +23,7 @@ profiles and applies them with one click: static address, DHCP, gateway and DNS.
 |---|---|
 | ![Manager window in light mode](docs/screenshots/main-light.png) | ![Manager window in dark mode](docs/screenshots/main-dark.png) |
 
-**Tray menu** (right-click on the tray icon):
+**Tray menu** (click the tray icon; a double-click opens the manager directly):
 
 ![Tray context menu with adapter submenu](docs/screenshots/tray-menu.png)
 

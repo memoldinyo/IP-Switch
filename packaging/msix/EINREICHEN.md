@@ -89,17 +89,24 @@ Administratorrechten, geringeren Speicherbedarf.
    ergänzen, dass der Hilfsprozess jetzt auch einen Adapter aktiviert bzw. deaktiviert (Text unten).
 5. **Additional Testing Information:** Text unten (mit Hinweis auf die neue Funktion) einsetzen und *Submit for certification*.
 
-Begründung *allowElevation* für 1.6.0 (unter 500 Zeichen):
+Am 10.11.2026 lehnte Microsoft `allowElevation` ab (Richtlinie 10.6.3: Begründung zu knapp, Support-Kontakt angeben).
+Am 11.11.2026 wurde 1.6.0 mit den folgenden Texten neu eingereicht; Website und Support-URL stehen unter
+*Properties › Support info*.
+
+Begründung *allowElevation* (483 Zeichen):
 
 ```
-Windows requires administrator rights to change network adapter settings. When the user applies a profile or turns an adapter off or on, IP-Switch starts a short-lived helper process of its own executable with a UAC prompt. It backs up the configuration, applies the change (netsh), verifies it and exits; on failure the backup is restored. If the user declines the UAC prompt, nothing is changed. By default the app itself runs without elevation.
+IP-Switch changes IPv4 settings (static IP, DNS, DHCP) and turns network adapters off/on. Windows allows this only for administrators; there is no API for standard users. Elevation happens only when the user clicks Apply or Disable: a short-lived helper (same exe) starts via a UAC prompt, runs netsh, verifies and exits. No auto-elevation, no service, no background task. Open source: https://github.com/memoldinyo/IP-Switch - Support: https://github.com/memoldinyo/IP-Switch/issues
 ```
 
-Additional Testing Information für 1.6.0 (unter 500 Zeichen):
+Additional Testing Information (446 Zeichen):
 
 ```
-No account or test data needed. IP-Switch runs in the notification area (tray icon "IP"). Select an adapter at the bottom and click "Save as profile" or "New profile"; "Apply profile now" changes the settings after a UAC prompt (backup first, automatic rollback). New in 1.6.0: "Disable adapter"/"Enable adapter" next to "Refresh" turns the selected adapter off and on (UAC prompt); disabled adapters show a red dot. Dialogs and tray menu follow dark mode.
+No account or test data needed. IP-Switch runs in the notification area (tray icon "IP"). Select an adapter at the bottom and click "Save as profile"; "Apply profile now" changes the settings after a UAC prompt (backup first, automatic rollback). New in 1.6.0: "Disable adapter"/"Enable adapter" next to "Refresh" turns the adapter off and on (UAC prompt); disabled adapters show a red dot. Support: https://github.com/memoldinyo/IP-Switch/issues
 ```
+
+Wird `allowElevation` erneut abgelehnt: Plan B ist die Einreichung als signierte MSI (Store für Win32-Installer,
+Signatur über SignPath Foundation oder Microsoft Trusted Signing).
 
 ## Neue Version
 

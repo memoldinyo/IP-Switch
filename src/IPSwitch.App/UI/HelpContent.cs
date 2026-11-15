@@ -55,7 +55,7 @@ internal static partial class HelpContent
         new("start", "Erste Schritte", Modern.Glyphs.Play,
         [
             new HelpBullets(
-                "1. Tray-Symbol anklicken → „Verwaltung öffnen …“.",
+                "1. Tray-Symbol doppelklicken oder anklicken → „Verwaltung öffnen …“.",
                 "2. Unten den Adapter wählen, den Sie konfigurieren möchten.",
                 "3. Rechts „Als Profil speichern“ wählen, um den aktuellen Zustand als Profil „Ausgangszustand“ festzuhalten.",
                 "4. „Neues Profil“ → Name, IP-Adresse, Subnetzmaske usw. eintragen → Speichern.",

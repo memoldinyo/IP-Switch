@@ -48,7 +48,7 @@ nur bei Bedarf geöffnet.
 
 1. **IP-Switch starten.** Nach der Installation startet IP-Switch automatisch. Das Symbol **IP** erscheint im
    Infobereich – ggf. über den Pfeil **^** neben der Uhr einblenden und per Drag & Drop dauerhaft anheften.
-2. **Verwaltung öffnen:** Tray-Symbol anklicken → **Verwaltung öffnen …**
+2. **Verwaltung öffnen:** Tray-Symbol doppelklicken oder anklicken → **Verwaltung öffnen …**
 3. **Ausgangszustand sichern:** Unten in der Adapterleiste den gewünschten Adapter anklicken, rechts
    **Als Profil speichern** wählen und z. B. „Ausgangszustand“ nennen.
 4. **Eigenes Profil anlegen:** **Neues Profil** → Name und Werte eintragen → **Speichern**.

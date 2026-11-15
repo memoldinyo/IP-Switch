@@ -48,7 +48,7 @@ is only opened when needed.
 
 1. **Start IP-Switch.** After installation IP-Switch starts automatically. The **IP** icon appears in the
    notification area – if necessary, show it via the **^** arrow next to the clock and pin it by drag & drop.
-2. **Open the manager:** click the tray icon → **Open manager …**
+2. **Open the manager:** double-click the tray icon, or click it → **Open manager …**
 3. **Save the original state:** click the desired adapter in the adapter bar at the bottom, choose **Save as
    profile** on the right and name it e.g. “Original state”.
 4. **Create your own profile:** **New profile** → enter name and values → **Save**.

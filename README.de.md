@@ -22,7 +22,7 @@ benannte Profile speichert und per Klick anwendet: statische Adresse, DHCP, Gate
 |---|---|
 | ![Verwaltungsfenster im hellen Modus](docs/screenshots/main-light-de.png) | ![Verwaltungsfenster im dunklen Modus](docs/screenshots/main-dark-de.png) |
 
-**Tray-Menü** (Rechtsklick auf das Tray-Symbol):
+**Tray-Menü** (Klick auf das Tray-Symbol; Doppelklick öffnet direkt die Verwaltung):
 
 ![Tray-Kontextmenü mit Adapter-Untermenü](docs/screenshots/tray-menu-de.png)
 

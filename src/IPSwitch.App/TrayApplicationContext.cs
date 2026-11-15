@@ -26,6 +26,7 @@ internal sealed class TrayApplicationContext : ApplicationContext
     private readonly NotifyIcon _notifyIcon;
     private readonly ContextMenuStrip _menu;
     private readonly System.Windows.Forms.Timer _debounce;
+    private readonly System.Windows.Forms.Timer _singleClick;
     private readonly SynchronizationContext _ui;
     private readonly Font _boldFont;
     private readonly bool _elevated = ElevationInfo.IsElevated;
@@ -55,6 +56,15 @@ internal sealed class TrayApplicationContext : ApplicationContext
             Visible = true,
         };
         _notifyIcon.MouseClick += OnNotifyIconClick;
+        _notifyIcon.MouseDoubleClick += OnNotifyIconDoubleClick;
+
+        // Linksklick öffnet das Menü erst, wenn kein Doppelklick folgt (Doppelklick öffnet die Verwaltung).
+        _singleClick = new System.Windows.Forms.Timer { Interval = Math.Max(SystemInformation.DoubleClickTime, 100) };
+        _singleClick.Tick += (_, _) =>
+        {
+            _singleClick.Stop();
+            ShowTrayMenu();
+        };
         _notifyIcon.BalloonTipClicked += (_, _) => ShowMainForm();
 
         _controller.Notify = (message, icon) => _notifyIcon.ShowBalloonTip(5000, "IP-Switch", Truncate(message, 250), icon);
@@ -122,6 +132,7 @@ internal sealed class TrayApplicationContext : ApplicationContext
             NetworkChange.NetworkAvailabilityChanged -= OnNetworkChanged;
             Microsoft.Win32.SystemEvents.SessionEnded -= OnSessionEnded;
             _debounce.Dispose();
+            _singleClick.Dispose();
             _notifyIcon.Visible = false;
             _notifyIcon.Dispose();
             _menu.Dispose();
@@ -150,6 +161,24 @@ internal sealed class TrayApplicationContext : ApplicationContext
             return;
         }
 
+        _singleClick.Stop();
+        _singleClick.Start();
+    }
+
+    private void OnNotifyIconDoubleClick(object? sender, MouseEventArgs e)
+    {
+        if (e.Button != MouseButtons.Left)
+        {
+            return;
+        }
+
+        _singleClick.Stop();
+        _menu.Close();
+        ShowMainForm();
+    }
+
+    private void ShowTrayMenu()
+    {
         // Linksklick öffnet ebenfalls das Menü (NotifyIcon bietet dafür keine öffentliche API).
         var show = typeof(NotifyIcon).GetMethod("ShowContextMenu", BindingFlags.Instance | BindingFlags.NonPublic);
         if (show is not null)

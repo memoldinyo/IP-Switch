@@ -5,6 +5,11 @@ version as release notes.
 
 ## [Unreleased]
 
+## [1.6.1] - 2026-11-15
+
+- **Double-click on the tray icon** opens the manager window directly; a single left or right click still opens the
+  tray menu.
+
 ## [1.6.0] - 2026-11-04
 
 - **Disable and enable adapters:** the selected network adapter can be turned off and on again in the manager window
@@ -47,7 +52,8 @@ First public release.
 - Import and export of profiles (JSON), sample profiles.
 - Per-user MSI installer and portable ZIP packages.
 
-[Unreleased]: https://github.com/memoldinyo/IP-Switch/compare/v1.6.0...HEAD
+[Unreleased]: https://github.com/memoldinyo/IP-Switch/compare/v1.6.1...HEAD
+[1.6.1]: https://github.com/memoldinyo/IP-Switch/compare/v1.6.0...v1.6.1
 [1.6.0]: https://github.com/memoldinyo/IP-Switch/compare/v1.5.0...v1.6.0
 [1.5.0]: https://github.com/memoldinyo/IP-Switch/compare/v1.4.0...v1.5.0
 [1.4.0]: https://github.com/memoldinyo/IP-Switch/releases/tag/v1.4.0
