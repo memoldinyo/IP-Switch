@@ -5,6 +5,11 @@ version as release notes.
 
 ## [Unreleased]
 
+## [1.6.2] - 2026-11-15
+
+- **Settings in the manager window:** the gear menu now contains the same *Settings* submenu as the tray menu
+  (show all adapters, notifications, autostart, appearance, language, data folder).
+
 ## [1.6.1] - 2026-11-15
 
 - **Double-click on the tray icon** opens the manager window directly; a single left or right click still opens the
@@ -52,7 +57,8 @@ First public release.
 - Import and export of profiles (JSON), sample profiles.
 - Per-user MSI installer and portable ZIP packages.
 
-[Unreleased]: https://github.com/memoldinyo/IP-Switch/compare/v1.6.1...HEAD
+[Unreleased]: https://github.com/memoldinyo/IP-Switch/compare/v1.6.2...HEAD
+[1.6.2]: https://github.com/memoldinyo/IP-Switch/compare/v1.6.1...v1.6.2
 [1.6.1]: https://github.com/memoldinyo/IP-Switch/compare/v1.6.0...v1.6.1
 [1.6.0]: https://github.com/memoldinyo/IP-Switch/compare/v1.5.0...v1.6.0
 [1.5.0]: https://github.com/memoldinyo/IP-Switch/compare/v1.4.0...v1.5.0

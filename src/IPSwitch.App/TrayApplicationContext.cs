@@ -209,7 +209,7 @@ internal sealed class TrayApplicationContext : ApplicationContext
     {
         if (_mainForm is null || _mainForm.IsDisposed)
         {
-            _mainForm = new MainForm(_controller);
+            _mainForm = new MainForm(_controller, () => BuildSettingsMenu(_controller.IsBusy));
             _mainForm.FormClosed += (_, _) =>
             {
                 _mainForm?.Dispose();
@@ -324,6 +324,27 @@ internal sealed class TrayApplicationContext : ApplicationContext
         _menu.Items.AddRange([open, newProfile]);
 
         _menu.Items.Add(new ToolStripSeparator());
+        var settings = BuildSettingsMenu(busy);
+
+        var help = new ToolStripMenuItem(Loc.T("tray.help"));
+        help.Click += (_, _) => HelpForm.ShowTopic(null);
+        var about = new ToolStripMenuItem(Loc.T("action.about"));
+        about.Click += (_, _) => Dialogs.Info(Owner, AppInfo.AboutText(_controller.Paths.DataDirectory));
+        var exit = new ToolStripMenuItem(Loc.T("tray.exit"));
+        exit.Click += (_, _) => ExitThread();
+        _menu.Items.AddRange([settings, help, about, new ToolStripSeparator(), exit]);
+
+        // Bei jedem Öffnen neu, damit ein geändertes Farbschema sofort gilt.
+        UI.Modern.ModernMenuRenderer.ApplyTo(_menu);
+        _menu.ResumeLayout();
+    }
+
+    /// <summary>
+    /// Untermenü "Einstellungen" (Adapter-Anzeige, Benachrichtigungen, Autostart, Darstellung, Sprache, Datenordner).
+    /// Wird im Tray-Menü und im Zahnrad-Menü des Verwaltungsfensters verwendet und bei jedem Öffnen neu erstellt.
+    /// </summary>
+    private ToolStripMenuItem BuildSettingsMenu(bool busy)
+    {
         var settings = new ToolStripMenuItem(Loc.T("tray.settings"));
         var showAll = new ToolStripMenuItem(Loc.T("tray.showAll")) { Checked = _controller.Settings.ShowAllAdapters };
         showAll.Click += (_, _) =>
@@ -415,18 +436,7 @@ internal sealed class TrayApplicationContext : ApplicationContext
         }
 
         settings.DropDownItems.AddRange([new ToolStripSeparator(), appearance, language, dataFolder]);
-
-        var help = new ToolStripMenuItem(Loc.T("tray.help"));
-        help.Click += (_, _) => HelpForm.ShowTopic(null);
-        var about = new ToolStripMenuItem(Loc.T("action.about"));
-        about.Click += (_, _) => Dialogs.Info(Owner, AppInfo.AboutText(_controller.Paths.DataDirectory));
-        var exit = new ToolStripMenuItem(Loc.T("tray.exit"));
-        exit.Click += (_, _) => ExitThread();
-        _menu.Items.AddRange([settings, help, about, new ToolStripSeparator(), exit]);
-
-        // Bei jedem Öffnen neu, damit ein geändertes Farbschema sofort gilt.
-        UI.Modern.ModernMenuRenderer.ApplyTo(_menu);
-        _menu.ResumeLayout();
+        return settings;
     }
 
     private ToolStripMenuItem BuildAdapterMenu(AdapterInfo adapter, IReadOnlyList<IpProfile> profiles, IReadOnlyList<AdapterInfo> adapters, bool busy)
@@ -520,7 +530,9 @@ internal sealed class TrayApplicationContext : ApplicationContext
         _controller.Settings.Theme = mode;
         _controller.SaveSettings();
         UI.Modern.Theme.Configure(mode);
-        RebuildWindows();
+
+        // Verzögert: Der Aufruf kann aus dem Zahnrad-Menü des Fensters kommen, das dabei neu aufgebaut wird.
+        _ui.Post(_ => RebuildWindows(), null);
     }
 
     /// <summary>Wechselt die Oberflächensprache (null = wie Windows); geöffnete Fenster werden neu aufgebaut.</summary>
@@ -530,7 +542,7 @@ internal sealed class TrayApplicationContext : ApplicationContext
         _controller.SaveSettings();
         Loc.SetLanguage(code);
         UpdateTooltip();
-        RebuildWindows();
+        _ui.Post(_ => RebuildWindows(), null);
     }
 
     private void RebuildWindows()

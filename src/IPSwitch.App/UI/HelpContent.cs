@@ -47,7 +47,7 @@ internal static partial class HelpContent
                 "Alle Daten bleiben lokal auf diesem Rechner – keine Cloud, keine Telemetrie."),
             new HelpHeading("Das Verwaltungsfenster"),
             new HelpTable(
-                ("Oben links", "Titel und Aktionen: Neues Profil, Bearbeiten, Duplizieren, Löschen, Zahnrad (Import, Export, Hilfe)."),
+                ("Oben links", "Titel und Aktionen: Neues Profil, Bearbeiten, Duplizieren, Löschen, Zahnrad (Einstellungen, Import, Export, Hilfe)."),
                 ("Links", "Profile als Kacheln mit Suchfeld. Das ⋮-Menü jeder Kachel enthält alle Profilaktionen."),
                 ("Rechts", "„Profil zuweisen auf:“ – Zieladapter, aktuelle Konfiguration, DHCP aktivieren, Profil jetzt anwenden."),
                 ("Unten", "Alle Netzwerkadapter als Kacheln. Ein Klick wählt den Zieladapter.")),
@@ -132,7 +132,7 @@ internal static partial class HelpContent
         ]),
         new("settings", "Einstellungen", Modern.Glyphs.Settings,
         [
-            new HelpParagraph("Alle Einstellungen finden Sie im Tray-Menü unter „Einstellungen“."),
+            new HelpParagraph("Alle Einstellungen finden Sie im Tray-Menü unter „Einstellungen“ – oder im Verwaltungsfenster über das Zahnrad → „Einstellungen“."),
             new HelpTable(
                 ("Alle Adapter anzeigen", "Zeigt auch virtuelle Hilfsadapter (Wi-Fi Direct, WAN Miniport usw.)."),
                 ("Erfolgsmeldungen anzeigen", "Benachrichtigung nach erfolgreichem Anwenden."),

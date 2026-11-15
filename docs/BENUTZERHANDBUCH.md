@@ -92,7 +92,7 @@ Beenden
 
 | Bereich | Inhalt |
 |---|---|
-| **Kopfkarte (oben links)** | Titel, **Neues Profil**, Bearbeiten, Duplizieren, Löschen, Zahnrad (Import, Export, Datenordner, Hilfe, Über) und **?** (Hilfe). |
+| **Kopfkarte (oben links)** | Titel, **Neues Profil**, Bearbeiten, Duplizieren, Löschen, Zahnrad (Einstellungen, Import, Export, Datenordner, Hilfe, Über) und **?** (Hilfe). |
 | **Profilzeile** | Anzahl der Profile, Suchfeld, **+ Neu** und **⋯** (Import, Export, Datenordner). |
 | **Profilkacheln (links)** | Jede Kachel zeigt IP/Präfix, Gateway, Modus, DNS und – falls vorhanden – den zugeordneten Adapter. Rechts unten öffnet **⋮** das Profilmenü. |
 | **Profil zuweisen auf: (rechts)** | Zieladapter, **Adapter deaktivieren/aktivieren**, **Aktualisieren**, aktuelle Adapterkonfiguration (mit **Details**, **Als Profil speichern**, **Sicherungen**), **DHCP aktivieren** und **Profil jetzt anwenden**. |
@@ -212,7 +212,7 @@ Exportdateien sind JSON-Dateien im Format `IPSwitch.Profiles`. Beim Import werde
 
 ## 11. Einstellungen
 
-Tray-Menü → **Einstellungen**:
+Tray-Menü → **Einstellungen** oder in der Verwaltung Zahnrad → **Einstellungen**:
 
 | Einstellung | Wirkung |
 |---|---|

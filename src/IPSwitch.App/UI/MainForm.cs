@@ -44,7 +44,7 @@ internal sealed class MainForm : Form
     private IReadOnlyList<AdapterInfo> _adapterCache = [];
     private bool _syncing;
 
-    public MainForm(AppController controller)
+    public MainForm(AppController controller, Func<ToolStripMenuItem>? settingsMenuFactory = null)
     {
         _controller = controller;
 
@@ -72,6 +72,27 @@ internal sealed class MainForm : Form
             (null, null, null),
             (Loc.T("action.helpF1"), Glyphs.Help, () => HelpForm.ShowTopic(null)),
             (Loc.T("action.about"), Glyphs.Info, () => Dialogs.Info(this, AppInfo.AboutText(_controller.Paths.DataDirectory))));
+
+        if (settingsMenuFactory is not null)
+        {
+            // Dieselben Einstellungen wie im Tray-Menü, ganz oben; bei jedem Öffnen neu (Häkchen, Sprache, Farbschema).
+            ToolStripItem[] current = [];
+            _settingsMenu.Opening += (_, _) =>
+            {
+                foreach (var old in current)
+                {
+                    _settingsMenu.Items.Remove(old);
+                    old.Dispose();
+                }
+
+                var settingsItem = settingsMenuFactory();
+                settingsItem.Tag = Glyphs.Settings;
+                current = [settingsItem, new ToolStripSeparator()];
+                _settingsMenu.Items.Insert(0, current[1]);
+                _settingsMenu.Items.Insert(0, settingsItem);
+                ModernMenuRenderer.ApplyTo(_settingsMenu);
+            };
+        }
 
         // ---------- Kopfkarte (links oben) ----------
         _edit = IconButton(Glyphs.Edit, Loc.T("main.tipEdit"), async (_, _) => await EditSelectedAsync());

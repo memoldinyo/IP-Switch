@@ -92,7 +92,7 @@ Exit
 
 | Area | Content |
 |---|---|
-| **Header card (top left)** | Title, **New profile**, Edit, Duplicate, Delete, gear (Import, Export, data folder, Help, About) and **?** (Help). |
+| **Header card (top left)** | Title, **New profile**, Edit, Duplicate, Delete, gear (Settings, Import, Export, data folder, Help, About) and **?** (Help). |
 | **Profile row** | Number of profiles, search box, **+ New** and **⋯** (Import, Export, data folder). |
 | **Profile tiles (left)** | Each tile shows IP/prefix, gateway, mode, DNS and – if present – the assigned adapter. **⋮** at the bottom right opens the profile menu. |
 | **Assign profile to: (right)** | Target adapter, **Disable/Enable adapter**, **Refresh**, current adapter configuration (with **Details**, **Save as profile**, **Backups**), **Enable DHCP** and **Apply profile now**. |
@@ -209,7 +209,7 @@ reason, name conflicts are resolved by renaming (“Name (2)”) and identifiers
 
 ## 11. Settings
 
-Tray menu → **Settings**:
+Tray menu → **Settings**, or in the manager gear → **Settings**:
 
 | Setting | Effect |
 |---|---|

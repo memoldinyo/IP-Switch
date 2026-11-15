@@ -20,7 +20,7 @@ internal static partial class HelpContent
                 "All data stays local on this computer – no cloud, no telemetry."),
             new HelpHeading("The manager window"),
             new HelpTable(
-                ("Top left", "Title and actions: New profile, Edit, Duplicate, Delete, gear (Import, Export, Help)."),
+                ("Top left", "Title and actions: New profile, Edit, Duplicate, Delete, gear (Settings, Import, Export, Help)."),
                 ("Left", "Profiles as tiles with a search box. The ⋮ menu of each tile contains all profile actions."),
                 ("Right", "“Assign profile to:” – target adapter, current configuration, Enable DHCP, Apply profile now."),
                 ("Bottom", "All network adapters as tiles. A click selects the target adapter.")),
@@ -105,7 +105,7 @@ internal static partial class HelpContent
         ]),
         new("settings", "Settings", Modern.Glyphs.Settings,
         [
-            new HelpParagraph("All settings are found in the tray menu under “Settings”."),
+            new HelpParagraph("All settings are found in the tray menu under “Settings” – or in the manager window via the gear → “Settings”."),
             new HelpTable(
                 ("Show all adapters", "Also shows virtual helper adapters (Wi-Fi Direct, WAN Miniport etc.)."),
                 ("Show success notifications", "Notification after a successful change."),
