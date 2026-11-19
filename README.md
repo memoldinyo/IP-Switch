@@ -100,7 +100,7 @@ Checksums: `SHA256SUMS.txt` in every release.
 **Manager window:** a card layout that follows the Windows light/dark mode (switchable in the tray under
 *Settings → Appearance*).
 - **Header:** “New profile”, Edit, Duplicate, Delete, ? (help). The gear holds the settings (same as in the tray
-  menu), import, export, data folder, help and about.
+  menu), import, export, Windows Network Connections (ncpa.cpl), data folder, help and about.
 - **Profiles:** tiles (two columns when the window is wide enough) with IP/prefix, gateway, mode, DNS and the assigned
   adapter, plus a search box, “+ New” and “⋯”. The **⋮ menu** of each tile (also via right-click) contains: apply to
   the target adapter, *Assign to ▸* (adapter or “No assignment”), Edit, Duplicate, Export and Delete.

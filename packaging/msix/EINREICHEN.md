@@ -22,8 +22,9 @@ der MSIX darin). `tools\Test-Msix.ps1` registriert das Paket zum Ausprobieren al
 - **Autostart** über den StartupTask des Pakets (nach dem ersten Start eingeschaltet). Abschalten unter
   *Windows-Einstellungen › Apps › Autostart*; im Tray-Menü führt *Einstellungen › Autostart verwalten* dorthin.
   Beim Autostart bleibt IP-Switch ohne Fenster im Infobereich.
-- **Start mit Administratorrechten** (geplante Aufgabe) gibt es im Paket nicht. Jede Änderung fragt per UAC
-  (Berechtigung `allowElevation`); *Jetzt mit Administratorrechten neu starten* funktioniert weiterhin.
+- **Start mit Administratorrechten** (geplante Aufgabe) gibt es im Paket nicht. Jede Änderung fragt per UAC;
+  *Jetzt mit Administratorrechten neu starten* funktioniert weiterhin. Das Paket braucht dafür **kein**
+  `allowElevation` (ab 1.6.3 entfernt, siehe unten).
 - **Daten** liegen im Paketordner (`%LOCALAPPDATA%\Packages\<Paketfamilie>\LocalState`). Beim ersten Start werden
   Profile und Einstellungen einer vorhandenen Desktop-Installation (`%LOCALAPPDATA%\IPSwitch`) übernommen.
 
@@ -47,66 +48,45 @@ der MSIX darin). `tools\Test-Msix.ps1` registriert das Paket zum Ausprobieren al
 5. **Store listings** – je Sprache die Texte aus [`STORE-LISTING.md`](STORE-LISTING.md) einfügen.
    Screenshots (1920×1080) aus [`screenshots/`](screenshots/) (auch auf GitHub herunterladbar): `1-light-<Sprache>.png`, `2-dark-<Sprache>.png`,
    `3-tray-<Sprache>.png`, `4-adapter-<Sprache>.png`. Store-Logos, Trailer und Xbox-Bilder leer lassen.
-6. **Submission options › Restricted capabilities** – je Berechtigung ein eigenes Feld, höchstens 500 Zeichen.
-
-   *runFullTrust*:
+6. **Submission options › Restricted capabilities** – nur noch `runFullTrust`, höchstens 500 Zeichen (484):
 
    ```
-   IP-Switch is a classic Win32 desktop app (Windows Forms, .NET 10) packaged with the Desktop Bridge. It switches the IPv4 settings of network adapters (static IP, subnet mask, gateway, DNS, DHCP) on the user's request. It needs full trust to run as a desktop app with a tray icon, to read the adapter configuration through the IP Helper API and the TCP/IP registry keys, and to start netsh.exe to apply settings. It has no network code and collects no data.
+   IP-Switch is a classic Win32 desktop app (Windows Forms, .NET 10) packaged with the Desktop Bridge. It switches IPv4 settings of network adapters (static IP, gateway, DNS, DHCP) on the user's request. Full trust is needed for the tray icon, to read the adapter configuration (IP Helper API) and to start a short-lived helper of its own exe with the standard UAC prompt, which runs netsh.exe. No network code, no data collection. Support: https://github.com/memoldinyo/IP-Switch/issues
    ```
 
-   *allowElevation*:
+   **Additional Testing Information** (*Supplemental info*, Hinweis für die Prüfer, 484 Zeichen):
 
    ```
-   Windows requires administrator rights to change network adapter settings with netsh. When the user applies a profile, IP-Switch starts a short-lived helper process of its own executable with a UAC prompt. The helper backs up the current configuration, applies the change, verifies it and exits; on failure the backup is restored automatically. If the user declines the UAC prompt, nothing is changed. By default the app itself runs without elevation.
+   No account or test data needed. IP-Switch runs in the notification area (tray icon "IP"); double-click it to open the manager. Select an adapter at the bottom and click "Save as profile"; "Apply profile now" changes the settings after a standard UAC prompt (backup first, automatic rollback). "Disable adapter"/"Enable adapter" next to "Refresh" turns the adapter off and on. Gear menu: settings, Network Connections (ncpa.cpl). Support: https://github.com/memoldinyo/IP-Switch/issues
    ```
 
-   **Additional Testing Information** (Hinweis für die Prüfer, ebenfalls unter 500 Zeichen):
+7. **Submit for certification.** Die Prüfung dauert meist 1–3 Werktage, wegen `runFullTrust` manchmal länger.
+   Das Ergebnis kommt per E-Mail.
 
-   ```
-   No account or test data needed. IP-Switch runs in the notification area (tray icon "IP"); the manager window opens on first start. Select a network adapter at the bottom and click "Save as profile" or "New profile". "Apply profile now" changes the adapter settings after a UAC prompt; the previous configuration is backed up first and restored automatically on failure. Right-click the tray icon for quick access, settings and help.
-   ```
+## Verlauf der Zertifizierung
 
-7. **Submit for certification.** Die Prüfung dauert meist 1–3 Werktage, beim ersten Mal wegen der eingeschränkten
-   Berechtigungen (`runFullTrust`, `allowElevation`) manchmal länger. Das Ergebnis kommt per E-Mail.
+| Datum | Einreichung | Ergebnis |
+|---|---|---|
+| 02.11.2026 | 1.5.0 mit `runFullTrust` + `allowElevation` | 10.11.: `allowElevation` abgelehnt (10.6.3) |
+| 11.11.2026 | 1.6.0, ausführlichere Begründung, Support-URL | 18.11.: erneut abgelehnt, gleicher Text |
+| 19.11.2026 | 1.6.3 **ohne** `allowElevation` | – |
 
-## Update 1.6.0 (neue Funktionen)
+Microsoft schlug selbst vor, die Berechtigung zu entfernen. Test am 19.11.2026 mit einem lokal registrierten Paket ohne
+`allowElevation`: Die App läuft mit Standardrechten, der Hilfsprozess startet per UAC-Abfrage, Adapter aus/ein und
+*Jetzt mit Administratorrechten neu starten* funktionieren. Ab 1.6.3 enthält das Paket daher nur noch `runFullTrust`.
 
-Version 1.5.0 wurde am 02.11.2026 als erste Version eingereicht. 1.6.0 bringt: Netzwerkadapter aus- und einschalten
-(roter Statuspunkt für deaktivierte Adapter), dunkle Meldungsfenster und dunkles Tray-Menü, Korrektur beim Neustart mit
-Administratorrechten, geringeren Speicherbedarf.
+**Dritter Versuch (1.6.3)** – in der abgelehnten Einreichung (*Application overview › Submission 1*):
 
-1. **Abwarten oder ersetzen:** Solange eine Einreichung in der Zertifizierung ist, lässt sich keine zweite anlegen.
-   - Empfohlen: warten, bis 1.5.0 veröffentlicht ist („In the Store“), dann *Application overview › Update*.
-   - Schneller: in der laufenden Einreichung *Cancel certification*, dann bei *Packages* die 1.5.0-MSIX löschen und die
-     1.6.0-MSIX hochladen, die Texte unten eintragen und neu einreichen (die Prüfung beginnt dann von vorn).
-2. **Packages:** `IPSwitch-1.6.0-x64.msix` hochladen (Build siehe oben oder GitHub-Actions-Artefakt `IPSwitch-1.6.0-msix`).
-   Die alte 1.5.0-MSIX entfernen; die Version muss höher sein als die zuletzt veröffentlichte.
-3. **Store listings:** je Sprache nur „What's new in this version“ und die neue Zeile unter „Features“ aus
-   [`STORE-LISTING.md`](STORE-LISTING.md) übernehmen, dazu den neuen Screenshot `4-adapter-<Sprache>.png` hinzufügen
-   und die Bilder 1–3 durch die neuen Fassungen ersetzen. Alternativ *Export listings* → CSV ausfüllen → *Import listings*.
-4. **Submission options:** Die Begründungen für `runFullTrust` und `allowElevation` bleiben; bei `allowElevation`
-   ergänzen, dass der Hilfsprozess jetzt auch einen Adapter aktiviert bzw. deaktiviert (Text unten).
-5. **Additional Testing Information:** Text unten (mit Hinweis auf die neue Funktion) einsetzen und *Submit for certification*.
+1. **Packages:** die 1.6.0-MSIX entfernen (*Remove*), `IPSwitch-1.6.3-x64.msix` hochladen. Die gelbe Warnung nennt danach
+   nur noch `runFullTrust`.
+2. **Submission options:** Das Feld für `allowElevation` verschwindet; die Begründung für `runFullTrust` durch den Text
+   oben (Schritt 6) ersetzen.
+3. **Supplemental info › Additional Testing Information:** Text oben einsetzen, *Save description*.
+4. **Store listings:** je Sprache „What's new in this version“ aus [`STORE-LISTING.md`](STORE-LISTING.md) (Version 1.6.3).
+5. *Application overview* → **Resubmit for certification**.
 
-Am 10.11.2026 lehnte Microsoft `allowElevation` ab (Richtlinie 10.6.3: Begründung zu knapp, Support-Kontakt angeben).
-Am 11.11.2026 wurde 1.6.0 mit den folgenden Texten neu eingereicht; Website und Support-URL stehen unter
-*Properties › Support info*.
-
-Begründung *allowElevation* (483 Zeichen):
-
-```
-IP-Switch changes IPv4 settings (static IP, DNS, DHCP) and turns network adapters off/on. Windows allows this only for administrators; there is no API for standard users. Elevation happens only when the user clicks Apply or Disable: a short-lived helper (same exe) starts via a UAC prompt, runs netsh, verifies and exits. No auto-elevation, no service, no background task. Open source: https://github.com/memoldinyo/IP-Switch - Support: https://github.com/memoldinyo/IP-Switch/issues
-```
-
-Additional Testing Information (446 Zeichen):
-
-```
-No account or test data needed. IP-Switch runs in the notification area (tray icon "IP"). Select an adapter at the bottom and click "Save as profile"; "Apply profile now" changes the settings after a UAC prompt (backup first, automatic rollback). New in 1.6.0: "Disable adapter"/"Enable adapter" next to "Refresh" turns the adapter off and on (UAC prompt); disabled adapters show a red dot. Support: https://github.com/memoldinyo/IP-Switch/issues
-```
-
-Wird `allowElevation` erneut abgelehnt: Plan B ist die Einreichung als signierte MSI (Store für Win32-Installer,
-Signatur über SignPath Foundation oder Microsoft Trusted Signing).
+Wird auch das abgelehnt: Plan B ist die Einreichung als signierte MSI (Store für Win32-Installer, Signatur über
+SignPath Foundation oder Microsoft Trusted Signing).
 
 ## Neue Version
 

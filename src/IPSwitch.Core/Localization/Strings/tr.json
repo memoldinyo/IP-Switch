@@ -11,6 +11,7 @@
   "action.import": "Profilleri içe aktar …",
   "action.importTitle": "Profilleri içe aktar",
   "action.openDataFolder": "Veri klasörünü aç",
+  "action.networkConnections": "Ağ Bağlantılarını aç (ncpa.cpl)",
   "adapter.missing": "{0} (mevcut değil)",
   "adapterState.alreadyDisabled": "“{0}” zaten devre dışı.",
   "adapterState.alreadyEnabled": "“{0}” zaten etkin.",

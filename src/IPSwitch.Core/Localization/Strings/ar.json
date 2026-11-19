@@ -11,6 +11,7 @@
   "action.import": "استيراد ملفات التعريف …",
   "action.importTitle": "استيراد ملفات التعريف",
   "action.openDataFolder": "فتح مجلد البيانات",
+  "action.networkConnections": "فتح اتصالات الشبكة (ncpa.cpl)",
   "adapter.missing": "{0} (غير موجود)",
   "adapterState.alreadyDisabled": "«{0}» معطّل بالفعل.",
   "adapterState.alreadyEnabled": "«{0}» ممكَّن بالفعل.",

@@ -11,6 +11,7 @@
   "action.import": "Import profiles …",
   "action.importTitle": "Import profiles",
   "action.openDataFolder": "Open data folder",
+  "action.networkConnections": "Open Network Connections (ncpa.cpl)",
   "adapter.missing": "{0} (not present)",
   "adapterState.alreadyDisabled": "“{0}” is already disabled.",
   "adapterState.alreadyEnabled": "“{0}” is already enabled.",

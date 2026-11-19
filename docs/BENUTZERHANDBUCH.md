@@ -75,7 +75,8 @@ Weitere Adapter (7)                  ▸     Anderes Profil anwenden ▸
 ──────────────────────────────             DHCP aktivieren (IP und DNS)
 Verwaltung öffnen …                        Adapter deaktivieren
 Neues Profil …                             Aktuelle Konfiguration als Profil speichern …
-──────────────────────────────             Letzte Sicherung wiederherstellen
+Netzwerkverbindungen öffnen (ncpa.cpl)     Letzte Sicherung wiederherstellen
+──────────────────────────────
 Einstellungen                        ▸
 Hilfe
 Über IP-Switch
@@ -92,7 +93,7 @@ Beenden
 
 | Bereich | Inhalt |
 |---|---|
-| **Kopfkarte (oben links)** | Titel, **Neues Profil**, Bearbeiten, Duplizieren, Löschen, Zahnrad (Einstellungen, Import, Export, Datenordner, Hilfe, Über) und **?** (Hilfe). |
+| **Kopfkarte (oben links)** | Titel, **Neues Profil**, Bearbeiten, Duplizieren, Löschen, Zahnrad (Einstellungen, Import, Export, Netzwerkverbindungen, Datenordner, Hilfe, Über) und **?** (Hilfe). |
 | **Profilzeile** | Anzahl der Profile, Suchfeld, **+ Neu** und **⋯** (Import, Export, Datenordner). |
 | **Profilkacheln (links)** | Jede Kachel zeigt IP/Präfix, Gateway, Modus, DNS und – falls vorhanden – den zugeordneten Adapter. Rechts unten öffnet **⋮** das Profilmenü. |
 | **Profil zuweisen auf: (rechts)** | Zieladapter, **Adapter deaktivieren/aktivieren**, **Aktualisieren**, aktuelle Adapterkonfiguration (mit **Details**, **Als Profil speichern**, **Sicherungen**), **DHCP aktivieren** und **Profil jetzt anwenden**. |

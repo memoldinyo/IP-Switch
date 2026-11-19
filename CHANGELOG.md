@@ -5,6 +5,13 @@ version as release notes.
 
 ## [Unreleased]
 
+## [1.6.3] - 2026-11-19
+
+- **Network Connections:** the tray menu and the gear menu of the manager window open the Windows Network
+  Connections (ncpa.cpl).
+- **Store package without `allowElevation`:** changes still ask for administrator rights via the standard UAC prompt;
+  the restricted capability is not needed for that and has been removed from the package.
+
 ## [1.6.2] - 2026-11-15
 
 - **Settings in the manager window:** the gear menu now contains the same *Settings* submenu as the tray menu
@@ -57,7 +64,8 @@ First public release.
 - Import and export of profiles (JSON), sample profiles.
 - Per-user MSI installer and portable ZIP packages.
 
-[Unreleased]: https://github.com/memoldinyo/IP-Switch/compare/v1.6.2...HEAD
+[Unreleased]: https://github.com/memoldinyo/IP-Switch/compare/v1.6.3...HEAD
+[1.6.3]: https://github.com/memoldinyo/IP-Switch/compare/v1.6.2...v1.6.3
 [1.6.2]: https://github.com/memoldinyo/IP-Switch/compare/v1.6.1...v1.6.2
 [1.6.1]: https://github.com/memoldinyo/IP-Switch/compare/v1.6.0...v1.6.1
 [1.6.0]: https://github.com/memoldinyo/IP-Switch/compare/v1.5.0...v1.6.0

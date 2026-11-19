@@ -11,6 +11,7 @@
   "action.import": "Импортировать профили …",
   "action.importTitle": "Импорт профилей",
   "action.openDataFolder": "Открыть папку данных",
+  "action.networkConnections": "Открыть сетевые подключения (ncpa.cpl)",
   "adapter.missing": "{0} (отсутствует)",
   "adapterState.alreadyDisabled": "«{0}» уже выключен.",
   "adapterState.alreadyEnabled": "«{0}» уже включён.",

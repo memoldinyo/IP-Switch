@@ -100,7 +100,7 @@ Prüfsummen: `SHA256SUMS.txt` in jedem Release.
 **Verwaltungsfenster:** Das Fenster ist im Kartenlayout aufgebaut. Es folgt dem Hell-/Dunkel-Modus von Windows;
 umschalten lässt sich das im Tray unter *Einstellungen → Darstellung*.
 - **Kopfbereich:** „Neues Profil“, Bearbeiten, Duplizieren, Löschen. Hinter dem Zahnrad liegen die Einstellungen (wie
-  im Tray-Menü), Import, Export und der Datenordner.
+  im Tray-Menü), Import, Export, die Windows-Netzwerkverbindungen (ncpa.cpl) und der Datenordner.
 - **Profile:** Kacheln (ab ausreichender Fensterbreite zweispaltig) mit IP/Präfix, Gateway, Modus, DNS und
   zugeordnetem Adapter, darüber Suchfeld, „+ Neu“ und „⋯“. Das **⋮-Menü** jeder Kachel (auch per Rechtsklick)
   enthält: Auf den Zieladapter anwenden, *Zuweisen an ▸* (Adapter oder „Keine Zuordnung“), Bearbeiten,

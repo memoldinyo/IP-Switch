@@ -93,6 +93,20 @@ internal static class Dialogs
         }
     }
 
+    /// <summary>Öffnet die Windows-Netzwerkverbindungen (ncpa.cpl) über control.exe aus dem Systemordner.</summary>
+    public static void OpenNetworkConnections()
+    {
+        var control = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.System), "control.exe");
+        try
+        {
+            Process.Start(new ProcessStartInfo(control) { ArgumentList = { "ncpa.cpl" }, UseShellExecute = false });
+        }
+        catch (Exception ex)
+        {
+            Error(null, Loc.T("dialog.openFailed", "ncpa.cpl", ex.Message));
+        }
+    }
+
     /// <summary>Öffnet eine Adresse wie "ms-settings:startupapps" mit der zuständigen Windows-App.</summary>
     public static void OpenUri(string uri)
     {

@@ -20,7 +20,7 @@ internal static partial class HelpContent
                 "All data stays local on this computer – no cloud, no telemetry."),
             new HelpHeading("The manager window"),
             new HelpTable(
-                ("Top left", "Title and actions: New profile, Edit, Duplicate, Delete, gear (Settings, Import, Export, Help)."),
+                ("Top left", "Title and actions: New profile, Edit, Duplicate, Delete, gear (Settings, Import, Export, Network Connections, Help)."),
                 ("Left", "Profiles as tiles with a search box. The ⋮ menu of each tile contains all profile actions."),
                 ("Right", "“Assign profile to:” – target adapter, current configuration, Enable DHCP, Apply profile now."),
                 ("Bottom", "All network adapters as tiles. A click selects the target adapter.")),

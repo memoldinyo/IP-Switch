@@ -47,7 +47,7 @@ internal static partial class HelpContent
                 "Alle Daten bleiben lokal auf diesem Rechner – keine Cloud, keine Telemetrie."),
             new HelpHeading("Das Verwaltungsfenster"),
             new HelpTable(
-                ("Oben links", "Titel und Aktionen: Neues Profil, Bearbeiten, Duplizieren, Löschen, Zahnrad (Einstellungen, Import, Export, Hilfe)."),
+                ("Oben links", "Titel und Aktionen: Neues Profil, Bearbeiten, Duplizieren, Löschen, Zahnrad (Einstellungen, Import, Export, Netzwerkverbindungen, Hilfe)."),
                 ("Links", "Profile als Kacheln mit Suchfeld. Das ⋮-Menü jeder Kachel enthält alle Profilaktionen."),
                 ("Rechts", "„Profil zuweisen auf:“ – Zieladapter, aktuelle Konfiguration, DHCP aktivieren, Profil jetzt anwenden."),
                 ("Unten", "Alle Netzwerkadapter als Kacheln. Ein Klick wählt den Zieladapter.")),

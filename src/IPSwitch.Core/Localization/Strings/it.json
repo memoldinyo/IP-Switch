@@ -11,6 +11,7 @@
   "action.import": "Importa profili …",
   "action.importTitle": "Importa profili",
   "action.openDataFolder": "Apri cartella dati",
+  "action.networkConnections": "Apri Connessioni di rete (ncpa.cpl)",
   "adapter.missing": "{0} (non presente)",
   "adapterState.alreadyDisabled": "«{0}» è già disattivata.",
   "adapterState.alreadyEnabled": "«{0}» è già attiva.",

@@ -68,6 +68,7 @@ internal sealed class MainForm : Form
             (Loc.T("action.import"), Glyphs.Import, Import),
             (Loc.T("action.exportAll"), Glyphs.Export, () => Export(_controller.Profiles.Profiles)),
             (null, null, null),
+            (Loc.T("action.networkConnections"), Glyphs.Ethernet, Dialogs.OpenNetworkConnections),
             (Loc.T("action.openDataFolder"), Glyphs.Folder, () => Dialogs.OpenFolder(_controller.Paths.DataDirectory)),
             (null, null, null),
             (Loc.T("action.helpF1"), Glyphs.Help, () => HelpForm.ShowTopic(null)),

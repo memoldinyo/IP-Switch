@@ -321,7 +321,9 @@ internal sealed class TrayApplicationContext : ApplicationContext
         open.Click += (_, _) => ShowMainForm();
         var newProfile = new ToolStripMenuItem(Loc.T("tray.newProfile"));
         newProfile.Click += async (_, _) => await _controller.EditProfileAsync(new IpProfile(), isNew: true, Owner);
-        _menu.Items.AddRange([open, newProfile]);
+        var networkConnections = new ToolStripMenuItem(Loc.T("action.networkConnections"));
+        networkConnections.Click += (_, _) => Dialogs.OpenNetworkConnections();
+        _menu.Items.AddRange([open, newProfile, networkConnections]);
 
         _menu.Items.Add(new ToolStripSeparator());
         var settings = BuildSettingsMenu(busy);

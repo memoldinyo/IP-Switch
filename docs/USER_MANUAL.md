@@ -75,7 +75,8 @@ More adapters (7)                    ▸     Apply another profile ▸
 ──────────────────────────────             Enable DHCP (IP and DNS)
 Open manager …                             Disable adapter
 New profile …                              Save current configuration as profile …
-──────────────────────────────             Restore latest backup
+Open Network Connections (ncpa.cpl)        Restore latest backup
+──────────────────────────────
 Settings                             ▸
 Help
 About IP-Switch
@@ -92,7 +93,7 @@ Exit
 
 | Area | Content |
 |---|---|
-| **Header card (top left)** | Title, **New profile**, Edit, Duplicate, Delete, gear (Settings, Import, Export, data folder, Help, About) and **?** (Help). |
+| **Header card (top left)** | Title, **New profile**, Edit, Duplicate, Delete, gear (Settings, Import, Export, Network Connections, data folder, Help, About) and **?** (Help). |
 | **Profile row** | Number of profiles, search box, **+ New** and **⋯** (Import, Export, data folder). |
 | **Profile tiles (left)** | Each tile shows IP/prefix, gateway, mode, DNS and – if present – the assigned adapter. **⋮** at the bottom right opens the profile menu. |
 | **Assign profile to: (right)** | Target adapter, **Disable/Enable adapter**, **Refresh**, current adapter configuration (with **Details**, **Save as profile**, **Backups**), **Enable DHCP** and **Apply profile now**. |

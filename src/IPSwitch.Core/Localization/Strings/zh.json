@@ -11,6 +11,7 @@
   "action.import": "导入配置文件 …",
   "action.importTitle": "导入配置文件",
   "action.openDataFolder": "打开数据文件夹",
+  "action.networkConnections": "打开网络连接 (ncpa.cpl)",
   "adapter.missing": "{0}（不存在）",
   "adapterState.alreadyDisabled": "“{0}”已处于禁用状态。",
   "adapterState.alreadyEnabled": "“{0}”已处于启用状态。",
