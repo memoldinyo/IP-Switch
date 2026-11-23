@@ -36,9 +36,10 @@ benannte Profile speichert und per Klick anwendet: statische Adresse, DHCP, Gate
 
 ### Microsoft Store
 
-IP-Switch ist auf dem Weg in den Microsoft Store als **[IP-Switch](https://apps.microsoft.com/detail/9N2Z0ZZSHM6S)**
-(der Link funktioniert, sobald Microsoft die App geprüft hat). Die Store-Version
-ist von Microsoft signiert, installiert sich ohne Warnhinweis und aktualisiert sich selbst. Netzwerkänderungen fragen
+<a href="https://apps.microsoft.com/detail/9N2Z0ZZSHM6S?mode=direct"><img src="https://get.microsoft.com/images/de%20dark.svg" width="200" alt="Bei Microsoft herunterladen"/></a>
+
+IP-Switch gibt es im Microsoft Store als **[IP-Switch](https://apps.microsoft.com/detail/9N2Z0ZZSHM6S)**.
+Die Store-Version ist von Microsoft signiert, installiert sich ohne Warnhinweis und aktualisiert sich selbst. Netzwerkänderungen fragen
 weiterhin nach Administratorrechten (UAC); den Autostart verwaltet man unter *Windows-Einstellungen › Apps ›
 Autostart*. Bitte entweder die Store-Version oder einen Download von GitHub nutzen, nicht beides – beim ersten Start
 übernimmt die Store-Version vorhandene Profile und Einstellungen.

@@ -69,7 +69,7 @@ der MSIX darin). `tools\Test-Msix.ps1` registriert das Paket zum Ausprobieren al
 |---|---|---|
 | 02.11.2026 | 1.5.0 mit `runFullTrust` + `allowElevation` | 10.11.: `allowElevation` abgelehnt (10.6.3) |
 | 11.11.2026 | 1.6.0, ausführlichere Begründung, Support-URL | 18.11.: erneut abgelehnt, gleicher Text |
-| 19.11.2026 | 1.6.3 **ohne** `allowElevation` | – |
+| 19.11.2026 | 1.6.3 **ohne** `allowElevation` | 23.11.: **zertifiziert, im Store** |
 
 Microsoft schlug selbst vor, die Berechtigung zu entfernen. Test am 19.11.2026 mit einem lokal registrierten Paket ohne
 `allowElevation`: Die App läuft mit Standardrechten, der Hilfsprozess startet per UAC-Abfrage, Adapter aus/ein und

@@ -37,9 +37,10 @@ profiles and applies them with one click: static address, DHCP, gateway and DNS.
 
 ### Microsoft Store
 
-IP-Switch is on its way to the Microsoft Store as **[IP-Switch](https://apps.microsoft.com/detail/9N2Z0ZZSHM6S)**
-(the link works once Microsoft has certified it). The Store version is
-signed by Microsoft, installs without any warning and updates itself. Network changes still ask for administrator
+<a href="https://apps.microsoft.com/detail/9N2Z0ZZSHM6S?mode=direct"><img src="https://get.microsoft.com/images/en-us%20dark.svg" width="200" alt="Get it from Microsoft"/></a>
+
+IP-Switch is available in the Microsoft Store as **[IP-Switch](https://apps.microsoft.com/detail/9N2Z0ZZSHM6S)**.
+The Store version is signed by Microsoft, installs without any warning and updates itself. Network changes still ask for administrator
 rights (UAC); autostart is managed under *Windows Settings › Apps › Startup*. Use either the Store version or a
 download from GitHub, not both – on first start the Store version takes over existing profiles and settings.
 

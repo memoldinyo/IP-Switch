@@ -44,7 +44,7 @@ Before every change IP-Switch backs up the current configuration, verifies the r
 **Keywords** ip changer, ip switcher, static ip, dhcp, network profile, network adapter, dns
 
 **What's new in this version**
-Version 1.6.3: Turn network adapters off and on – in the manager window and in the tray menu; disabled adapters show a red status dot. A double-click on the tray icon opens the manager, its gear menu now contains all settings, and Windows Network Connections (ncpa.cpl) open directly from the tray and the manager. Messages and the tray menu follow dark mode.
+Version 1.6.4: The tray icon now reliably appears even if IP-Switch starts before the taskbar (for example at sign-in) or Windows Explorer restarts. Also in 1.6.3: turn network adapters off and on, double-click on the tray icon opens the manager, all settings in its gear menu, and Windows Network Connections (ncpa.cpl) directly from the tray and the manager.
 
 ---
 
@@ -73,7 +73,7 @@ Vor jeder Änderung sichert IP-Switch die aktuelle Konfiguration, prüft das Erg
 **Suchbegriffe** IP ändern, IP-Adresse, statische IP, DHCP, Netzwerkprofil, Netzwerkadapter, DNS
 
 **Neu in dieser Version**
-Version 1.6.3: Netzwerkadapter aus- und einschalten – im Verwaltungsfenster und im Tray-Menü; deaktivierte Adapter zeigen einen roten Statuspunkt. Ein Doppelklick auf das Tray-Symbol öffnet die Verwaltung, ihr Zahnrad-Menü enthält jetzt alle Einstellungen, und die Windows-Netzwerkverbindungen (ncpa.cpl) öffnen sich direkt aus Tray und Verwaltung. Meldungen und Tray-Menü folgen dem Dunkelmodus.
+Version 1.6.4: Das Tray-Symbol erscheint jetzt zuverlässig, auch wenn IP-Switch vor der Taskleiste startet (z. B. bei der Anmeldung) oder der Windows-Explorer neu startet. Außerdem seit 1.6.3: Netzwerkadapter aus- und einschalten, Doppelklick auf das Tray-Symbol öffnet die Verwaltung, alle Einstellungen im Zahnrad-Menü und die Windows-Netzwerkverbindungen (ncpa.cpl) direkt aus Tray und Verwaltung.
 
 ---
 
@@ -102,7 +102,7 @@ IP-Switch her değişiklikten önce mevcut yapılandırmayı yedekler, sonucu do
 **Anahtar kelimeler** ip değiştirici, ip adresi, statik ip, dhcp, ağ profili, ağ bağdaştırıcısı, dns
 
 **Bu sürümdeki yenilikler**
-Sürüm 1.6.3: Ağ bağdaştırıcılarını kapatıp açın – yönetim penceresinde ve tepsi menüsünde; devre dışı bağdaştırıcılar kırmızı durum noktasıyla gösterilir. Tepsi simgesine çift tıklamak yönetim penceresini açar, dişli menüsü artık tüm ayarları içerir ve Windows Ağ Bağlantıları (ncpa.cpl) doğrudan tepsiden ve yönetim penceresinden açılır. Mesajlar ve tepsi menüsü koyu modu izler.
+Sürüm 1.6.4: Tepsi simgesi artık IP-Switch görev çubuğundan önce başlasa bile (örneğin oturum açılırken) veya Windows Gezgini yeniden başlasa bile güvenilir şekilde görünür. Ayrıca 1.6.3 ile: ağ bağdaştırıcılarını kapatıp açma, tepsi simgesine çift tıklayınca yönetim penceresi, dişli menüsünde tüm ayarlar ve Windows Ağ Bağlantıları (ncpa.cpl) doğrudan tepsiden ve yönetim penceresinden.
 
 ---
 
@@ -131,7 +131,7 @@ Avant chaque modification, IP-Switch sauvegarde la configuration actuelle, véri
 **Mots-clés** changer ip, adresse ip, ip statique, dhcp, profil réseau, carte réseau, dns
 
 **Nouveautés de cette version**
-Version 1.6.3 : désactivez et réactivez les cartes réseau – dans la fenêtre de gestion et dans le menu de la zone de notification ; les cartes désactivées affichent un point d'état rouge. Un double-clic sur l'icône ouvre la fenêtre de gestion, son menu engrenage contient désormais tous les paramètres, et les Connexions réseau de Windows (ncpa.cpl) s'ouvrent directement depuis le menu et la fenêtre. Les messages et le menu suivent le mode sombre.
+Version 1.6.4 : l'icône de la zone de notification apparaît désormais de façon fiable, même si IP-Switch démarre avant la barre des tâches (par exemple à l'ouverture de session) ou si l'Explorateur Windows redémarre. Également depuis la 1.6.3 : désactiver et réactiver les cartes réseau, double-clic sur l'icône pour ouvrir la fenêtre de gestion, tous les paramètres dans le menu engrenage et les Connexions réseau de Windows (ncpa.cpl) directement depuis le menu et la fenêtre.
 
 ---
 
@@ -160,7 +160,7 @@ Prima di ogni modifica IP-Switch salva la configurazione attuale, verifica il ri
 **Parole chiave** cambiare ip, indirizzo ip, ip statico, dhcp, profilo di rete, scheda di rete, dns
 
 **Novità di questa versione**
-Versione 1.6.3: disattiva e riattiva le schede di rete – nella finestra di gestione e nel menu dell'area di notifica; le schede disattivate mostrano un punto di stato rosso. Un doppio clic sull'icona apre la finestra di gestione, il suo menu a ingranaggio ora contiene tutte le impostazioni e le Connessioni di rete di Windows (ncpa.cpl) si aprono direttamente dal menu e dalla finestra. I messaggi e il menu seguono la modalità scura.
+Versione 1.6.4: l'icona nell'area di notifica ora compare in modo affidabile anche se IP-Switch si avvia prima della barra delle applicazioni (ad esempio all'accesso) o se Esplora risorse si riavvia. Inoltre dalla 1.6.3: disattivare e riattivare le schede di rete, doppio clic sull'icona per aprire la finestra di gestione, tutte le impostazioni nel menu a ingranaggio e le Connessioni di rete di Windows (ncpa.cpl) direttamente dal menu e dalla finestra.
 
 ---
 
@@ -189,7 +189,7 @@ IP-Switch تطبيق خفيف في منطقة الإعلامات لكل من ي�
 **الكلمات المفتاحية** تغيير IP، عنوان IP، IP ثابت، DHCP، ملف تعريف الشبكة، محول الشبكة، DNS
 
 **الجديد في هذا الإصدار**
-الإصدار 1.6.3: أوقف محولات الشبكة وشغّلها – في نافذة الإدارة وفي قائمة منطقة الإعلامات؛ تظهر المحولات المعطّلة بنقطة حالة حمراء. النقر المزدوج على الأيقونة يفتح نافذة الإدارة، وتحتوي قائمة الترس فيها الآن على كل الإعدادات، وتُفتح اتصالات الشبكة في Windows (ncpa.cpl) مباشرة من القائمة والنافذة. تتبع الرسائل والقائمة الوضع الداكن.
+الإصدار 1.6.4: تظهر أيقونة منطقة الإعلامات الآن بشكل موثوق حتى إذا بدأ IP-Switch قبل شريط المهام (مثلاً عند تسجيل الدخول) أو أُعيد تشغيل مستكشف Windows. ومنذ الإصدار 1.6.3 أيضاً: إيقاف محولات الشبكة وتشغيلها، والنقر المزدوج على الأيقونة يفتح نافذة الإدارة، وكل الإعدادات في قائمة الترس، وفتح اتصالات الشبكة في Windows (ncpa.cpl) مباشرة من القائمة والنافذة.
 
 ---
 
@@ -218,7 +218,7 @@ IP-Switch 是一款轻量的通知区域（托盘）应用，适合经常更改�
 **关键字** IP 切换, IP 地址, 静态 IP, DHCP, 网络配置文件, 网络适配器, DNS
 
 **此版本的新增功能**
-版本 1.6.3：在管理窗口和托盘菜单中禁用和启用网络适配器；已禁用的适配器显示红色状态点。双击托盘图标即可打开管理窗口，其齿轮菜单现在包含所有设置，并可直接从托盘和管理窗口打开 Windows 网络连接 (ncpa.cpl)。消息和托盘菜单支持深色模式。
+版本 1.6.4：即使 IP-Switch 在任务栏之前启动（例如登录时）或 Windows 资源管理器重新启动，托盘图标现在也能可靠显示。1.6.3 起还支持：禁用和启用网络适配器，双击托盘图标打开管理窗口，齿轮菜单包含所有设置，并可直接从托盘和管理窗口打开 Windows 网络连接 (ncpa.cpl)。
 
 ---
 
@@ -247,4 +247,4 @@ IP-Switch – лёгкое приложение для области уведо
 **Ключевые слова** смена ip, ip-адрес, статический ip, dhcp, сетевой профиль, сетевой адаптер, dns
 
 **Что нового в этой версии**
-Версия 1.6.3: выключайте и включайте сетевые адаптеры – в окне управления и в меню области уведомлений; выключенные адаптеры отмечены красной точкой. Двойной щелчок по значку открывает окно управления, его меню с шестерёнкой теперь содержит все настройки, а сетевые подключения Windows (ncpa.cpl) открываются прямо из меню и окна. Сообщения и меню поддерживают тёмную тему.
+Версия 1.6.4: значок в области уведомлений теперь надёжно появляется, даже если IP-Switch запускается раньше панели задач (например, при входе в систему) или перезапускается Проводник Windows. Также начиная с 1.6.3: выключение и включение сетевых адаптеров, двойной щелчок по значку открывает окно управления, все настройки в меню с шестерёнкой и сетевые подключения Windows (ncpa.cpl) прямо из меню и окна.

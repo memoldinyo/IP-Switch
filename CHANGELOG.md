@@ -5,6 +5,13 @@ version as release notes.
 
 ## [Unreleased]
 
+## [1.6.4] - 2026-11-23
+
+- **Fixed:** the tray icon was missing when IP-Switch started with administrator rights before the taskbar was ready
+  (e.g. autostart at sign-in) or after Windows Explorer restarted. The icon now reappears as soon as the taskbar is
+  created.
+- **Microsoft Store:** IP-Switch is available in the Microsoft Store; the README links to it.
+
 ## [1.6.3] - 2026-11-19
 
 - **Network Connections:** the tray menu and the gear menu of the manager window open the Windows Network
@@ -64,7 +71,8 @@ First public release.
 - Import and export of profiles (JSON), sample profiles.
 - Per-user MSI installer and portable ZIP packages.
 
-[Unreleased]: https://github.com/memoldinyo/IP-Switch/compare/v1.6.3...HEAD
+[Unreleased]: https://github.com/memoldinyo/IP-Switch/compare/v1.6.4...HEAD
+[1.6.4]: https://github.com/memoldinyo/IP-Switch/compare/v1.6.3...v1.6.4
 [1.6.3]: https://github.com/memoldinyo/IP-Switch/compare/v1.6.2...v1.6.3
 [1.6.2]: https://github.com/memoldinyo/IP-Switch/compare/v1.6.1...v1.6.2
 [1.6.1]: https://github.com/memoldinyo/IP-Switch/compare/v1.6.0...v1.6.1

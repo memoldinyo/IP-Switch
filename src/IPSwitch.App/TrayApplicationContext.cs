@@ -48,6 +48,9 @@ internal sealed class TrayApplicationContext : ApplicationContext
         };
         _ui = SynchronizationContext.Current ?? new WindowsFormsSynchronizationContext();
 
+        // Symbol neu anlegen, wenn die Taskleiste erst nach IP-Switch startet (auch mit Administratorrechten).
+        TaskbarNotifications.AllowTaskbarCreated();
+
         _notifyIcon = new NotifyIcon
         {
             Icon = AppIcons.Tray,
